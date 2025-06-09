@@ -14,8 +14,9 @@ class EnquiryController extends Controller
 {
     public function create()
     {
-        return view('enquiry.create');
+        return view('public.enquiry.form');
     }
+
 
     public function store(Request $request)
     {
