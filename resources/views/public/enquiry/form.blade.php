@@ -1,5 +1,4 @@
-@extends('layouts.mantis')
-
+@extends('layouts.app')
 
 @section('content')
 <div class="card shadow p-4">

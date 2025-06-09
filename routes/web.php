@@ -19,9 +19,9 @@ use App\Http\Controllers\ExpenseController;
 
 
 //Direct Open The Enquiry form for users 
-// Route::get('/', function () {
-//     return redirect('/enquiry');
-// });
+Route::get('/', function () {
+    return redirect('/enquiry');
+});
 
 //Home Page 
 Route::get('/enquiry', [EnquiryController::class, 'create']);
@@ -43,14 +43,8 @@ Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
-//
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware('auth')->name('dashboard');
 
-// In web.php
-Route::get('/enquiry', [EnquiryController::class, 'create']);
 
-Route::get('/dashboard', function () {
-    return view('admin.dashboard');  // or whatever blade file you renamed
-})->name('dashboard');
+
+
+

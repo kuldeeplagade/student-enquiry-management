@@ -2,26 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Student Enquiry - Mantis</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Enquiry</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Mantis CSS -->
-    <link rel="stylesheet" href="{{ asset('mantis/assets/css/style.css') }}">
-    <link rel="stylesheet" href="{{ asset('mantis/assets/css/icons.css') }}">
-    <link rel="stylesheet" href="{{ asset('mantis/assets/libs/bootstrap/css/bootstrap.min.css') }}">
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
+<body style="background-color: #f4f7fa;">
 
-<body>
-    <!-- Sidebar, header, etc., can stay if needed -->
-    
-    <!-- Page content -->
     <div class="container mt-5">
         @yield('content')
     </div>
 
-    <!-- JS -->
-    <script src="{{ asset('mantis/assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('mantis/assets/js/app.js') }}"></script>
+    <!-- Bootstrap Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     @stack('scripts')
 </body>
