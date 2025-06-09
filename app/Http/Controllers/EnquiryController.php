@@ -20,24 +20,39 @@ class EnquiryController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'candidate_name' => 'required|string',
-            'dob' => 'required|date',
-            'parent_contact' => [
-                'required',
-                'regex:/^[0-9]{10}$/',
-                Rule::unique('enquiries')->where(function ($query) use ($request) {
-                    return $query->where('admission_for', $request->admission_for);
-                }),
-            ],
-            'admission_for' => 'required|in:Playgroup,Nursery,Jr.KG,Sr.KG',
-        ], [
-            'parent_contact.regex' => 'Parent contact must be exactly 10 digits.',
-            'parent_contact.unique' => 'This parent contact already enquired for the selected class.',
-        ]);
-    
+    $request->validate([
+        'surname' => 'required|string|max:100',
+        'first_name' => 'required|string|max:100',
+        'middle_name' => 'nullable|string|max:100',
+        'dob' => 'required|date',
+
+        'sex' => 'required|in:Male,Female,Other',
+        'blood_group' => 'nullable|string|max:10',
+
+        'father_mobile' => 'required|digits:10',
+        'mother_mobile' => 'nullable|digits:10', // This expects exactly 10 digits if provided
+        'landline' => 'nullable|string|max:15',
+        'email' => 'nullable|email|max:100',
+
+        'sibling1_name' => 'nullable|string|max:100',
+        'sibling1_sex' => 'nullable|in:Male,Female,Other',
+        'sibling1_dob' => 'nullable|date',
+
+        'sibling2_name' => 'nullable|string|max:100',
+        'sibling2_sex' => 'nullable|in:Male,Female,Other',
+        'sibling2_dob' => 'nullable|date',
+
+        'address' => 'nullable|string|max:255',
+        'state' => 'nullable|string|max:100',
+        'city' => 'nullable|string|max:100',
+        'pin' => 'nullable|string|max:10',
+    ], [
+        'dob.required' => 'Date of Birth is required.',
+        'mother_mobile.digits' => 'Mother mobile must be exactly 10 digits.',
+    ]);
+
         Enquiry::create($request->all());
-    
+
         return redirect()->back()->with('success', 'Enquiry submitted successfully!');
     }
 

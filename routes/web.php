@@ -38,10 +38,14 @@ Route::middleware('auth')->group(function () {
 });
 
 //Login Routes 
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
-Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard')->middleware('auth');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+Route::get('/dashboard', function () {
+    return "Welcome! You're logged in.";
+})->middleware('auth');
 
 
 

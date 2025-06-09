@@ -8,11 +8,28 @@ use Illuminate\Database\Eloquent\Model;
 class Enquiry extends Model
 {
     use HasFactory;
-    
-    protected $fillable= [
-        "candidate_name",
-        "dob",
-        "parent_contact",
-        "admission_for"
+
+    protected $fillable = [
+        'surname',
+        'first_name',
+        'middle_name',
+        'dob',
+        'sex',
+        'blood_group',
+        'father_mobile',
+        'mother_mobile',
+        'landline',
+        'email',
+        'admission_for',
+        'sibling1_name',
+        'sibling1_sex',
+        'sibling1_dob',
+        'sibling2_name',
+        'sibling2_sex',
+        'sibling2_dob',
+        'address',
+        'state',
+        'city',
+        'pin',
     ];
 }
