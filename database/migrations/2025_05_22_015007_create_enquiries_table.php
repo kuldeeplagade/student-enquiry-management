@@ -31,6 +31,10 @@ class CreateEnquiriesTable extends Migration
             $table->string('state')->nullable();
             $table->string('city')->nullable();
             $table->string('pin')->nullable();
+            $table->enum('payment_status', ['Pending', 'Payment Started'])->default('Pending');
+            $table->enum('payment_mode', ['Cash', 'UPI', 'Bank Transfer'])->nullable();
+            $table->decimal('amount_paid', 10, 2)->nullable();
+            $table->decimal('total_amount', 10, 2)->default(25000); // Default total amount
             $table->timestamps();
         });
     }

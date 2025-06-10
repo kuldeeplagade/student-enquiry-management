@@ -31,5 +31,9 @@ class Enquiry extends Model
         'state',
         'city',
         'pin',
+        'payment_status',
+        'payment_mode',
+        'amount_paid',
+        'total_amount'
     ];
 }

@@ -1,54 +1,61 @@
+<!-- resources/views/dashboard.blade.php -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Dashboard</title>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            min-height: 100vh;
+            display: flex;
+        }
+        .sidebar {
+            width: 250px;
+            background: #343a40;
+            color: #fff;
+            min-height: 100vh;
+        }
+        .sidebar a {
+            color: #fff;
+            display: block;
+            padding: 12px 20px;
+            text-decoration: none;
+        }
+        .sidebar a:hover {
+            background: #495057;
+        }
+        .content {
+            flex: 1;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+        .navbar {
+            background-color: #fff;
+            border-bottom: 1px solid #dee2e6;
+        }
+    </style>
 </head>
 <body>
-<div class="container mt-5">
-    <h2 class="mb-4">Welcome, {{ auth()->user()->name }}!</h2>
 
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
+<div class="sidebar">
+    <h4 class="p-3">Dashboard</h4>
+    <a href="{{ route('enquiries.index') }}">View Enquiries</a>
+    {{-- More menu items can be added later --}}
+</div>
 
-    <div class="card">
-        <div class="card-header bg-primary text-white">
-            Dashboard Navigation
+<div class="content">
+    <nav class="navbar navbar-light">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h5">Welcome! You're logged in.</span>
         </div>
-        <div class="card-body">
-            <ul class="list-group">
+    </nav>
 
-                <!-- Common to Admin and Super Admin -->
-                <li class="list-group-item">
-                    <a href="{{ route('enquiries.index') }}">📋 View Enquiries</a>
-                </li>
-
-
-                <!-- Super Admin Only
-                @if(auth()->user()->role === 'superadmin')
-                    <li class="list-group-item">
-                        <a href="{{ route('admin.activities.index') }}">🧾 View Admin Activities</a>
-                    </li>
-
-                    <li class="list-group-item">
-                        <a href="{{ route('expenses.index') }}">💰 View Expenses</a>
-                    </li>
-
-                    <li class="list-group-item">
-                        <a href="{{ route('reports.income_vs_expense') }}">📈 Income vs Expense Report</a>
-                    </li>
-                @endif -->
-
-                <li class="list-group-item">
-                    <form action="{{ route('logout') }}" method="POST" onsubmit="return confirm('Logout?')">
-                        @csrf
-                        <button type="submit" class="btn btn-sm btn-danger mt-2">Logout</button>
-                    </form>
-                </li>
-            </ul>
-        </div>
+    {{-- Page-specific content --}}
+    <div class="mt-4">
+        @yield('content')
     </div>
 </div>
+
 </body>
 </html>

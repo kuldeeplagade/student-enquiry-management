@@ -41,8 +41,10 @@ Route::post('/enquiry', [EnquiryController::class, 'store'])->name('enquiry.stor
 // Enquiry Management Routes
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    
     Route::get('/dashboard/enquiries', [EnquiryController::class, 'index'])->name('enquiries.index');
     Route::get('/dashboard/enquiries/{id}/edit', [EnquiryController::class, 'edit'])->name('enquiries.edit');
+    Route::get('/dashboard/enquiries/{id}', [EnquiryController::class, 'show'])->name('enquiries.show');
     Route::put('/dashboard/enquiries/{id}', [EnquiryController::class, 'update'])->name('enquiries.update');
 });
 
