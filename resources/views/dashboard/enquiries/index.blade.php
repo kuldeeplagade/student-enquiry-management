@@ -12,23 +12,24 @@
     <form method="GET" action="{{ route('enquiries.index') }}" class="mb-4">
         <div class="row">
             <div class="col-md-4">
-                <select name="class" id="class" class="form-select" onchange="this.form.submit()">
-                    <option value="All" {{ $selectedClass == 'All' ? 'selected' : '' }}>All</option>
-                    @if(is_array($classes))
-                        @foreach($classes as $class)
-                            <option value="{{ $class }}" {{ $selectedClass == $class ? 'selected' : '' }}>
-                                {{ $class }}
-                            </option>
-                        @endforeach
-                    @endif
-                </select>
+            <select name="class" id="class" class="form-select" onchange="this.form.submit()">
+                <option value="All" {{ $selectedClass == 'All' ? 'selected' : '' }}>All</option>
+                @if(is_array($classes))
+                    @foreach($classes as $class)
+                        <option value="{{ $class }}" {{ $selectedClass == $class ? 'selected' : '' }}>
+                            {{ $class }}
+                        </option>
+                    @endforeach
+                @endif
+            </select>
+
             </div>
         </div>
     </form>
 
-    {{-- Super Admin Link to just show when the login super admin  --}}
+    {{-- Super Admin View Expenses Button --}}
     @auth
-        @if(auth()->user()->is_super_admin)
+        @if(auth()->user()->role === 'superadmin')
             <div class="mb-3">
                 <a href="{{ route('expenses.index') }}" class="btn btn-success">
                     View Expenses (Super Admin Only)
@@ -37,16 +38,19 @@
         @endif
     @endauth
 
-    {{-- Single Table for All Enquiries --}}
+    {{-- Enquiry Table --}}
     <div class="card">
         <div class="card-body p-0">
             <table class="table table-bordered table-hover align-middle mb-0">
                 <thead class="table-primary">
                     <tr>
                         <th>ID</th>
-                        <th>Candidate Name</th>
+                        <th>Full Name</th>
                         <th>DOB</th>
-                        <th>Parent Contact</th>
+                        <th>Sex</th>
+                        <th>Father Mobile</th>
+                        <th>Mother Mobile</th>
+                        <th>Email</th>
                         <th>Class</th>
                         <th>Action</th>
                     </tr>
@@ -55,9 +59,12 @@
                     @forelse($enquiries as $enquiry)
                         <tr>
                             <td>{{ $enquiry->id }}</td>
-                            <td>{{ $enquiry->candidate_name }}</td>
+                            <td>{{ $enquiry->surname }} {{ $enquiry->first_name }} {{ $enquiry->middle_name }}</td>
                             <td>{{ $enquiry->dob }}</td>
-                            <td>{{ $enquiry->parent_contact }}</td>
+                            <td>{{ $enquiry->sex }}</td>
+                            <td>{{ $enquiry->father_mobile }}</td>
+                            <td>{{ $enquiry->mother_mobile }}</td>
+                            <td>{{ $enquiry->email }}</td>
                             <td>{{ $enquiry->admission_for }}</td>
                             <td>
                                 <a href="{{ route('enquiries.edit', $enquiry->id) }}" class="btn btn-sm btn-warning">Edit</a>
@@ -65,7 +72,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="text-center">No enquiries found.</td>
+                            <td colspan="9" class="text-center">No enquiries found.</td>
                         </tr>
                     @endforelse
                 </tbody>

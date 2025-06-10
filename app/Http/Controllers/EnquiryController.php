@@ -59,33 +59,45 @@ class EnquiryController extends Controller
     //Enquirie GET , Update 
     public function index(Request $request)
     {
+        $selectedClass = $request->get('class', 'All');
         $classes = ['Playgroup', 'Nursery', 'Jr.KG', 'Sr.KG'];
-        $selectedClass = $request->query('class', 'All');
 
-        if ($selectedClass != 'All' && in_array($selectedClass, $classes)) {
-            $enquiries = Enquiry::where('admission_for', $selectedClass)->get();
-        } else {
-            $enquiries = Enquiry::all();
-        }
+        $enquiries = Enquiry::when($selectedClass !== 'All', function ($query) use ($selectedClass) {
+            return $query->where('admission_for', $selectedClass);
+        })->get();
 
-        return view('enquiry.index', compact('enquiries', 'classes', 'selectedClass'));
+        return view('dashboard.enquiries.index', compact('enquiries', 'classes', 'selectedClass'));
     }
-
-    
 
     public function edit($id)
     {
         $enquiry = Enquiry::findOrFail($id);
-        return view('enquiry.edit', compact('enquiry'));
+        return view('dashboard.enquiries.edit', compact('enquiry'));
     }
 
     public function update(Request $request, $id)
     {
         $request->validate([
-            'candidate_name' => 'required|string',
+            'surname' => 'required|string|max:100',
+            'first_name' => 'required|string|max:100',
+            'middle_name' => 'nullable|string|max:100',
             'dob' => 'required|date',
-            'parent_contact' => 'required|string',
-            'admission_for' => 'required|in:Playgroup,Nursery,Jr.KG,Sr.KG',
+            'sex' => 'required|in:Male,Female,Other',
+            'blood_group' => 'nullable|string|max:10',
+            'father_mobile' => 'required|digits:10',
+            'mother_mobile' => 'nullable|digits:10',
+            'landline' => 'nullable|string|max:15',
+            'email' => 'nullable|email|max:100',
+            'sibling1_name' => 'nullable|string|max:100',
+            'sibling1_sex' => 'nullable|in:Male,Female,Other',
+            'sibling1_dob' => 'nullable|date',
+            'sibling2_name' => 'nullable|string|max:100',
+            'sibling2_sex' => 'nullable|in:Male,Female,Other',
+            'sibling2_dob' => 'nullable|date',
+            'address' => 'nullable|string|max:255',
+            'state' => 'nullable|string|max:100',
+            'city' => 'nullable|string|max:100',
+            'pin' => 'nullable|string|max:10',
         ]);
 
         $enquiry = Enquiry::findOrFail($id);
