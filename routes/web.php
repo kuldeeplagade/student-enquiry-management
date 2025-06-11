@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EnquiryController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ExpenseController;
@@ -17,10 +19,6 @@ use App\Http\Controllers\ExpenseController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 
 //Direct Open The Enquiry form for users 
 Route::get('/', function () {
@@ -31,23 +29,37 @@ Route::get('/', function () {
 Route::get('/enquiry', [EnquiryController::class, 'create']);
 Route::post('/enquiry', [EnquiryController::class, 'store'])->name('enquiry.store');
 
-//Get All enquiries for just admin
-Route::middleware('auth')->group(function () {
-    Route::get('/enquiries', [EnquiryController::class, 'index'])->name('enquiries.index');
-    Route::get('/enquiries/{enquiry}/edit', [EnquiryController::class, 'edit'])->name('enquiries.edit');
-    Route::put('/enquiries/{enquiry}', [EnquiryController::class, 'update'])->name('enquiries.update');
+// Enquiry Management Routes
+Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    
+    //Enquiries Related Routes 
+    Route::get('/dashboard/enquiries', [EnquiryController::class, 'index'])->name('enquiries.index');
+    Route::get('/dashboard/enquiries/{id}/edit', [EnquiryController::class, 'edit'])->name('enquiries.edit');
+    Route::get('/dashboard/enquiries/{id}', [EnquiryController::class, 'show'])->name('enquiries.show');
+    Route::put('/dashboard/enquiries/{id}', [EnquiryController::class, 'update'])->name('enquiries.update');
+});
 
-    //This is route for the Super Admin 
-    Route::resource('expenses', ExpenseController::class)->only(['index', 'create', 'store']);
+
+//Payment Related Routes 
+Route::prefix('dashboard')->middleware('auth')->group(function () {
+    Route::get('/enquiries/{id}/payments', [PaymentController::class, 'index'])->name('payments.index'); // View history
+    Route::get('/enquiries/{id}/payments/create', [PaymentController::class, 'create'])->name('payments.create'); // Show add form
+    Route::post('/enquiries/{id}/payments', [PaymentController::class, 'store'])->name('payments.store'); // Save new payment
 });
 
 //Login Routes 
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
-Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+// Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard')->middleware('auth');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// Route::get('/dashboard', function () {
+//     return "Welcome! You're logged in.";
+// })->middleware('auth');
 
 
-//
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware('auth')->name('dashboard');
+
+
+
+
