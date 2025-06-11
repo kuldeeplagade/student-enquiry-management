@@ -21,6 +21,7 @@ class Enquiry extends Model
         'landline',
         'email',
         'admission_for',
+        'total_amount',
         'sibling1_name',
         'sibling1_sex',
         'sibling1_dob',
@@ -30,10 +31,11 @@ class Enquiry extends Model
         'address',
         'state',
         'city',
-        'pin',
-        'payment_status',
-        'payment_mode',
-        'amount_paid',
-        'total_amount'
+        'pin'
     ];
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
 }
