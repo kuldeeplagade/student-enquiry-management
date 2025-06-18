@@ -90,6 +90,28 @@
             <input type="email" name="email" class="form-control" placeholder="Enter valid email" value="{{ old('email') }}">
         </div>
 
+        <!-- Address -->
+        <h5 class="text-primary mt-4">Address Details</h5>
+        <div class="mb-3">
+            <label class="form-label">Address</label>
+            <textarea name="address" class="form-control" rows="2">{{ old('address') }}</textarea>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label class="form-label">State</label>
+                <input type="text" name="state" class="form-control" value="{{ old('state') }}">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">City</label>
+                <input type="text" name="city" class="form-control" value="{{ old('city') }}">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">PIN Code</label>
+                <input type="text" name="pin" class="form-control" value="{{ old('pin') }}">
+            </div>
+        </div>
+
         <!-- Siblings -->
         <h5 class="text-primary mt-4">Siblings / Reference Details</h5>
 
@@ -133,28 +155,7 @@
             </div>
         </div>
 
-        <!-- Address -->
-        <h5 class="text-primary mt-4">Address Details</h5>
-        <div class="mb-3">
-            <label class="form-label">Address</label>
-            <textarea name="address" class="form-control" rows="2">{{ old('address') }}</textarea>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col-md-4">
-                <label class="form-label">State</label>
-                <input type="text" name="state" class="form-control" value="{{ old('state') }}">
-            </div>
-            <div class="col-md-4">
-                <label class="form-label">City</label>
-                <input type="text" name="city" class="form-control" value="{{ old('city') }}">
-            </div>
-            <div class="col-md-4">
-                <label class="form-label">PIN Code</label>
-                <input type="text" name="pin" class="form-control" value="{{ old('pin') }}">
-            </div>
-        </div>
-
+        <!--Submit button--->
         <div class="text-end">
             <button type="submit" class="btn btn-success">Submit Enquiry</button>
         </div>

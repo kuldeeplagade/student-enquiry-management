@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-
-
-
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Models\Enquiry;
+use App\Models\AdminActivity;
+use App\Helpers\ActivityLogger;
 
 
 class EnquiryController extends Controller
@@ -111,16 +110,13 @@ class EnquiryController extends Controller
                 'state' => 'nullable|string',
                 'city' => 'nullable|string',
                 'pin' => 'nullable|string',
-
-                // Payment-related fields
-                'payment_status' => 'nullable|in:Pending,Payment Started',
-                'payment_mode' => 'nullable|in:Cash,UPI,Bank Transfer',
-                'amount_paid' => 'nullable|numeric|min:0',
-                'total_amount' => 'nullable|numeric|min:0',
             ]);
 
             $enquiry = Enquiry::findOrFail($id);
             $enquiry->update($request->all());
+
+            //Activity Log for the Admin Activity 
+            ActivityLogger::log('Enquiry Updated', 'Updated enquiry ID ' . $enquiry->id . ' for student: ' . $enquiry->first_name);
 
             return redirect()->route('enquiries.index')->with('success', 'Enquiry updated successfully.');
 

@@ -18,7 +18,13 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended('/dashboard');
+
+            $user = Auth::user();
+            if ($user->role === 'superadmin') {
+                return redirect()->route('revenue.summary');
+            } else {
+                return redirect()->route('enquiries.index');
+            }
         }
 
         return back()->with('error', 'Invalid email or password.');

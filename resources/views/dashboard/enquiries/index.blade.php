@@ -23,7 +23,7 @@
 <div class="card">
     <div class="card-body p-0">
         <table class="table table-bordered table-hover">
-            <thead class="table-light">
+            <thead class="table-dark">
                 <tr>
                     <th>ID</th>
                     <th>Candidate Name</th>

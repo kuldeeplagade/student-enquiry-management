@@ -38,16 +38,44 @@
 </head>
 <body>
 
+
+<!-- Sidebar -->
 <div class="sidebar">
     <h4 class="p-3">Dashboard</h4>
-    <a href="{{ route('enquiries.index') }}">View Enquiries</a>
+    
+    <!--View All Enquiries--->
+    <a href="{{ route('enquiries.index') }}">📋 View Enquiries</a>
+
+    <!--View All Expenses --->
+    @auth
+        @if(auth()->user()->role === 'superadmin')
+            <a href="{{ route('expenses.index') }}">💸 View Expenses</a>
+        @endif
+    @endauth
+    
+    <!--View All Revenue Summary --->
+    @auth
+        @if(auth()->user()->role === 'superadmin')
+            <a href="{{ route('revenue.summary') }}">📈 Revenue Summary</a>
+        @endif
+    @endauth
+
+    <!--View Admin Adctivities --->
+    @if(auth()->user()->role === 'superadmin')
+        <a href="{{ route('admin.activities') }}">🛠️ View Admin Activities</a>
+    @endif
+
+
+
     {{-- More menu items can be added later --}}
 </div>
 
 <div class="content">
     <nav class="navbar navbar-light">
         <div class="container-fluid">
-            <span class="navbar-brand mb-0 h5">Welcome! You're logged in.</span>
+            <span class="navbar-brand mb-0 h5">
+                Welcome! You're logged in as <strong>{{ ucfirst(auth()->user()->name) }}</strong>.
+            </span>
         </div>
     </nav>
 

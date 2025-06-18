@@ -5,45 +5,87 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth; 
 use App\Models\Expense;
+use App\Models\Payment;
+use App\Models\Enquiry;
 
 class ExpenseController extends Controller
 {
-    // Middleware to ensure only super admin can access
-    public function __construct()
+    //Total Expenses & Net Profit 
+    public function revenueSummary()
     {
-        $this->middleware(function ($request, $next) {
-            if (auth()->check() && auth()->user()->is_super_admin) {
-                return $next($request);
-            }
-            abort(403, 'Unauthorized');
-        });
+        $totalRevenue = Payment::sum('amount_paid');
+        $totalExpenses = Expense::sum('amount');
+        $netProfit = $totalRevenue - $totalExpenses;
+
+        //  New addition
+        $expectedRevenue = Enquiry::sum('total_amount'); // from enquiries table
+
+        return view('dashboard.expenses.revenue-summary', compact(
+            'totalRevenue',
+            'totalExpenses',
+            'netProfit',
+            'expectedRevenue'
+        ));
     }
 
-    // Show list of expenses
+
     public function index()
     {
-        $expenses = Expense::all();
-        return view('expenses.index', compact('expenses'));
+        $expenses = Expense::orderBy('date', 'desc')->get();
+        $total = $expenses->sum('amount');
+        return view('dashboard.expenses.index', compact('expenses', 'total'));
     }
 
-    // Show form to create a new expense
     public function create()
     {
-        return view('expenses.create');
+        return view('dashboard.expenses.create');
     }
 
-    // Store a new expense
     public function store(Request $request)
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'amount' => 'required|numeric',
-            'category' => 'nullable|string|max:255',
-            'note' => 'nullable|string',
+            'amount' => 'required|numeric|min:0',
+            'date' => 'required|date',
+            'notes' => 'nullable|string',
         ]);
 
-        Expense::create($request->all());
+        try {
+            Expense::create($request->all());
+            return redirect()->route('expenses.index')->with('success', 'Expense added successfully.');
+        } catch (\Exception $e) {
+            \Log::error('Expense store error: '.$e->getMessage());
+            return back()->with('error', 'Something went wrong while saving expense.');
+        }
+    }
 
-        return redirect()->route('expenses.index')->with('success', 'Expense added successfully.');
-    }    
+    public function edit($id)
+    {
+        $expense = Expense::findOrFail($id);
+        return view('dashboard.expenses.edit', compact('expense'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'title' => 'required|string',
+            'amount' => 'required|numeric|min:0',
+            'date' => 'required|date',
+            'notes' => 'nullable|string',
+        ]);
+
+        $expense = Expense::findOrFail($id);
+        $expense->update($request->all());
+
+        return redirect()->route('expenses.index')->with('success', 'Expense updated successfully.');
+    }
+
+    public function destroy($id)
+    {
+        $expense = Expense::findOrFail($id);
+        $expense->delete();
+
+        return redirect()->route('expenses.index')->with('success', 'Expense deleted successfully.');
+    }
+
 }
