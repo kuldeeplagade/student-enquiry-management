@@ -13,16 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('expenses', function (Blueprint $table) {
+        Schema::create('admin_activities', function (Blueprint $table) {
             $table->id();
-            $table->string('title'); // Expense title (e.g., Rent, Salary)
-            $table->decimal('amount', 10, 2);
-            $table->date('date')->default(DB::raw('CURRENT_DATE'));
-            $table->text('notes')->nullable();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('activity_type'); // e.g. Payment Added
+            $table->text('description')->nullable(); // Optional
             $table->timestamps();
         });
     }
-
 
     /**
      * Reverse the migrations.
@@ -31,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('expenses');
+        Schema::dropIfExists('admin_activities');
     }
 };

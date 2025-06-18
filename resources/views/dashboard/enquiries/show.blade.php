@@ -55,41 +55,6 @@
                     <div class="form-control" readonly>{{ $enquiry->admission_for }}</div>
                 </div>
 
-                <div class="col-12 mt-4">
-                    <hr>
-                    <h5>Payment Details</h5>
-                </div>
-
-                <div class="col-md-4">
-                    <label class="form-label">Payment Status</label><br>
-                    @if($enquiry->payment_status === 'Payment Started')
-                        <span class="btn btn-success w-100 disabled">Payment Started</span>
-                    @else
-                        <span class="badge bg-secondary">Pending</span>
-                    @endif
-                </div>
-
-                <div class="col-md-4">
-                    <label class="form-label">Payment Mode</label>
-                    <div class="form-control bg-light">{{ $enquiry->payment_mode ?? '-' }}</div>
-                </div>
-
-                <div class="col-md-4">
-                    <label class="form-label">Amount Paid (₹)</label>
-                    <div class="form-control bg-light">{{ $enquiry->amount_paid ?? 0 }}</div>
-                </div>
-
-                <div class="col-md-6">
-                    <label class="form-label">Total Amount (₹)</label>
-                    <div class="form-control bg-light">{{ $enquiry->total_amount ?? 25000 }}</div>
-                </div>
-
-                <div class="col-md-6">
-                    <label class="form-label">Pending Fees (₹)</label>
-                    <div class="form-control bg-light">{{ ($enquiry->total_amount ?? 25000) - ($enquiry->amount_paid ?? 0) }}</div>
-                </div>
-
-
                 <div class="col-12">
                     <hr>
                     <h5>Sibling 1</h5>

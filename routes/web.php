@@ -4,9 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EnquiryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\AdminActivityController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,8 +38,18 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/enquiries/{id}/edit', [EnquiryController::class, 'edit'])->name('enquiries.edit');
     Route::get('/dashboard/enquiries/{id}', [EnquiryController::class, 'show'])->name('enquiries.show');
     Route::put('/dashboard/enquiries/{id}', [EnquiryController::class, 'update'])->name('enquiries.update');
-});
 
+    //Expenses Related Routes Access:Superadmin
+    Route::get('/expenses', [ExpenseController::class, 'index'])->name('expenses.index');
+    Route::get('/expenses/create', [ExpenseController::class, 'create'])->name('expenses.create');
+    Route::post('/expenses/store', [ExpenseController::class, 'store'])->name('expenses.store');
+    Route::get('/expenses/{id}/edit', [ExpenseController::class, 'edit'])->name('expenses.edit');
+    Route::put('/expenses/{id}', [ExpenseController::class, 'update'])->name('expenses.update');
+    Route::delete('/expenses/{id}', [ExpenseController::class, 'destroy'])->name('expenses.destroy');
+
+    Route::get('/revenue-summary', [ExpenseController::class, 'revenueSummary'])->name('revenue.summary');
+
+});
 
 //Payment Related Routes 
 Route::prefix('dashboard')->middleware('auth')->group(function () {
@@ -47,6 +57,13 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::get('/enquiries/{id}/payments/create', [PaymentController::class, 'create'])->name('payments.create'); // Show add form
     Route::post('/enquiries/{id}/payments', [PaymentController::class, 'store'])->name('payments.store'); // Save new payment
 });
+
+
+//SuperAdmin Check the Activity in All Admins
+Route::get('/admin-activities', [AdminActivityController::class, 'index'])
+    ->middleware('auth')
+    ->name('admin.activities');
+
 
 //Login Routes 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');

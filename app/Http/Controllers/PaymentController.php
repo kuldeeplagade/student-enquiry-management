@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Enquiry;
 use App\Models\Payment;
+use App\Helpers\ActivityLogger;
 
 class PaymentController extends Controller
 {
@@ -37,6 +38,13 @@ class PaymentController extends Controller
             $enquiry->save();
         }
 
+        //Track Admin Activity 
+        $class = $enquiry->admission_for ?? 'Class Not Set';
+        ActivityLogger::log(
+            'Total Fee Set',
+            '🎯 Total fee of ₹' . $enquiry->total_amount . ' set for ' . $enquiry->first_name . ' ' . $enquiry->last_name . ' (' . $class . ')'
+        );
+
         // Check for overpayment
         $total = $enquiry->total_amount ?? 0;
         $paid = $enquiry->payments->sum('amount_paid');
@@ -50,9 +58,13 @@ class PaymentController extends Controller
         Payment::create([
             'enquiry_id' => $enquiry->id,
             'payment_mode' => $request->payment_mode,
+            'user_id' => auth()->id(),
             'amount_paid' => $newPayment,
             'notes' => $request->notes,
         ]);
+
+        //  New Line: Log activity
+        ActivityLogger::paymentAdded($enquiry->payments()->latest()->first(), $enquiry);
 
         return redirect()->route('payments.index', $enquiry->id)->with('success', ' Payment recorded successfully.');
     }

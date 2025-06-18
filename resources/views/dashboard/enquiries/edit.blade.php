@@ -73,49 +73,6 @@
                         </select>
                     </div>
 
-                    <div class="col-12 mt-4">
-                        <hr>
-                        <h5>Payment Details</h5>
-                    </div>
-
-                    <div class="col-md-4">
-                        <label class="form-label">Payment Status</label>
-                        @if($enquiry->payment_status === 'Payment Started')
-                            <button class="btn btn-success w-100" disabled>Payment Started</button>
-                        @else
-                            <select name="payment_status" class="form-select">
-                                <option value="Pending" {{ old('payment_status', $enquiry->payment_status) == 'Pending' ? 'selected' : '' }}>Pending</option>
-                                <option value="Payment Started" {{ old('payment_status', $enquiry->payment_status) == 'Payment Started' ? 'selected' : '' }}>Payment Started</option>
-                            </select>
-                        @endif
-                    </div>
-
-                    <div class="col-md-4">
-                        <label class="form-label">Payment Mode</label>
-                        <select name="payment_mode" class="form-select">
-                            <option value="">Select</option>
-                            @foreach(['Cash', 'UPI', 'Bank Transfer'] as $mode)
-                                <option value="{{ $mode }}" {{ old('payment_mode', $enquiry->payment_mode) == $mode ? 'selected' : '' }}>{{ $mode }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="col-md-4">
-                        <label class="form-label">Amount Paid (₹)</label>
-                        <input type="number" class="form-control" name="amount_paid" value="{{ old('amount_paid', $enquiry->amount_paid) }}">
-                    </div>
-
-                    <div class="col-md-6">
-                        <label class="form-label">Total Amount (₹)</label>
-                        <input type="number" class="form-control" name="total_amount" value="{{ old('total_amount', $enquiry->total_amount ?? 25000) }}">
-                    </div>
-
-                    <div class="col-md-6">
-                        <label class="form-label">Pending Fees (₹)</label>
-                        <input type="number" class="form-control bg-light" value="{{ ($enquiry->total_amount ?? 25000) - ($enquiry->amount_paid ?? 0) }}" readonly>
-                    </div>
-
-
                     <div class="col-12">
                         <hr>
                         <h5>Sibling 1</h5>
