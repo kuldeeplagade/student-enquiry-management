@@ -2,8 +2,36 @@
 
 @section('content')
 <div class="container mt-4">
-    <h4 class="mb-4">📊 Revenue & Expense Summary </h4>
+    <h4 class="mb-4">📊 Revenue & Expense Summary</h4>
 
+    <!-- Filter Form -->
+    <form method="GET" class="row g-3 mb-4">
+        <div class="col-md-3">
+            <label for="month" class="form-label">Select Month</label>
+            <select class="form-select" name="month" id="month">
+                @foreach(range(1,12) as $m)
+                    <option value="{{ $m }}" {{ request('month', date('n')) == $m ? 'selected' : '' }}>
+                        {{ date('F', mktime(0, 0, 0, $m, 1)) }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label for="year" class="form-label">Select Year</label>
+            <select class="form-select" name="year" id="year">
+                @for($y = now()->year; $y >= 2023; $y--)
+                    <option value="{{ $y }}" {{ request('year', date('Y')) == $y ? 'selected' : '' }}>{{ $y }}</option>
+                @endfor
+            </select>
+        </div>
+
+        <div class="col-md-3 d-flex align-items-end">
+            <button type="submit" class="btn btn-dark w-100">🔍 Filter</button>
+        </div>
+    </form>
+
+    <!-- Revenue Summary Cards -->
     <div class="row mb-4">
         <!-- Total Revenue -->
         <div class="col-md-3">

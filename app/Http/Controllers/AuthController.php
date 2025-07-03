@@ -16,8 +16,13 @@ class AuthController extends Controller
     {
         $credentials = $request->only('email', 'password');
 
-        if (Auth::attempt($credentials)) {
+        $remember = $request->has('remember');
+
+        if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
+
+            // ✅ Flash welcome message for one-time display
+            session()->flash('show_welcome', true);
 
             $user = Auth::user();
             if ($user->role === 'superadmin') {
@@ -29,4 +34,5 @@ class AuthController extends Controller
 
         return back()->with('error', 'Invalid email or password.');
     }
+
 }

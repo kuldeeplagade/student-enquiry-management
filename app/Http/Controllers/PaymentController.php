@@ -32,18 +32,24 @@ class PaymentController extends Controller
             'total_amount' => 'nullable|numeric|min:1'
         ]);
 
-        // Set total_amount only if it was empty
+        //  Add a flag to check if we're setting it first time
+        $feeJustSet = false;
+
+        //  Only set total amount if it's null
         if (is_null($enquiry->total_amount) && $request->filled('total_amount')) {
             $enquiry->total_amount = $request->input('total_amount');
             $enquiry->save();
+            $feeJustSet = true;
         }
 
-        //Track Admin Activity 
-        $class = $enquiry->admission_for ?? 'Class Not Set';
-        ActivityLogger::log(
-            'Total Fee Set',
-            '🎯 Total fee of ₹' . $enquiry->total_amount . ' set for ' . $enquiry->first_name . ' ' . $enquiry->last_name . ' (' . $class . ')'
-        );
+        //  Log only if it was just set
+        if ($feeJustSet) {
+            $class = $enquiry->admission_for ?? 'Class Not Set';
+            ActivityLogger::log(
+                'Total Fee Set',
+                '🎯 Total fee of ₹' . $enquiry->total_amount . ' set for ' . $enquiry->first_name . ' ' . $enquiry->last_name . ' (' . $class . ')'
+            );
+        }
 
         // Check for overpayment
         $total = $enquiry->total_amount ?? 0;
@@ -63,8 +69,17 @@ class PaymentController extends Controller
             'notes' => $request->notes,
         ]);
 
-        //  New Line: Log activity
-        ActivityLogger::paymentAdded($enquiry->payments()->latest()->first(), $enquiry);
+        // Log Payment Added activity (inline format)
+        $payment = $enquiry->payments()->latest()->first();
+        $class = $enquiry->admission_for ?? 'Class Not Set';
+        $name = $enquiry->first_name . ' ' . $enquiry->last_name;
+        $amount = number_format($payment->amount_paid, 2);
+        $mode = $payment->payment_mode;
+
+        ActivityLogger::log(
+            'Payment Added',
+            "💰 ₹{$amount} paid by {$name} ({$class}) via {$mode}"
+        );
 
         return redirect()->route('payments.index', $enquiry->id)->with('success', ' Payment recorded successfully.');
     }
