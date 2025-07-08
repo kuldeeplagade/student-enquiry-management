@@ -2,12 +2,14 @@
 
 @section('content')
 <div class="container mt-4">
-    <h4 class="mb-4">🛠️ Admin Management</h4>
+    <h4 class="mb-4">
+    <i class="bi bi-person-gear text-dark me-2"></i> Admin Management
+    </h4>
 
     <table class="table table-bordered bg-white">
         <thead class="table-light">
             <tr>
-                <th>#</th>
+                <th>Id</th>
                 <th>Name</th>
                 <th>Email</th>
                 <th>Role</th>

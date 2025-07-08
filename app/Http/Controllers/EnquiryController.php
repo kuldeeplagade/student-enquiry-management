@@ -62,7 +62,7 @@ class EnquiryController extends Controller
         return view('dashboard.enquiries.show', compact('enquiry'));
     }
 
-    //Get All Enquiries  
+    // Get All Enquiries  
     public function index(Request $request)
     {
         $selectedClass = $request->get('class', 'All');
@@ -70,7 +70,9 @@ class EnquiryController extends Controller
 
         $enquiries = Enquiry::when($selectedClass !== 'All', function ($query) use ($selectedClass) {
             return $query->where('admission_for', $selectedClass);
-        })->get();
+        })
+        ->orderBy('id', 'desc')       //  Newest enquiries first
+        ->paginate(5);               //  Paginate (10 per page)
 
         return view('dashboard.enquiries.index', compact('enquiries', 'classes', 'selectedClass'));
     }

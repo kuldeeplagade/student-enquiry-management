@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container">
-        <h4 class="mb-4">🛠️ Admin Activity Log</h4>
+        <h4 class="mb-4"><i class="bi bi-tools"></i> Admin Activity Log</h4>
         <table class="table table-bordered bg-white">
             <thead class="table-dark">
                 <tr>
@@ -30,4 +30,9 @@
             </tbody>
         </table>
     </div>
+     <!-- Pagination -->
+    <div class="d-flex justify-content-end mt-3">
+        {{ $activities->links() }}
+    </div>
+    
 @endsection

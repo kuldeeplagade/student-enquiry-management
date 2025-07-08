@@ -50,10 +50,10 @@
     {{-- Add Payment Button --}}
     <div class="mb-3">
         <a href="{{ route('payments.create', $enquiry->id) }}" class="btn btn-success">
-            ➕ Add Payment
+         <i class="bi bi-plus-circle-fill"></i>Add Payment
         </a>
         <a href="{{ route('enquiries.index') }}" class="btn btn-secondary">
-            🔙 Back to Enquiries
+            <i class="bi bi-skip-backward"></i> Back to Enquiries
         </a>
     </div>
 

@@ -9,7 +9,7 @@ class AdminActivityController extends Controller
 {
     public function index()
     {
-        $activities = AdminActivity::with('user')->latest()->get();
+        $activities = AdminActivity::with('user')->latest()->paginate(10);;
 
         return view('dashboard.activities.index', compact('activities'));
     }

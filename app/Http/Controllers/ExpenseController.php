@@ -37,7 +37,7 @@ class ExpenseController extends Controller
 
     public function index()
     {
-        $expenses = Expense::orderBy('date', 'desc')->get();
+        $expenses = Expense::orderBy('date', 'desc')->paginate(5);
         $total = $expenses->sum('amount');
         return view('dashboard.expenses.index', compact('expenses', 'total'));
     }

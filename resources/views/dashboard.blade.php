@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Admin Dashboard</title>
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -14,7 +16,7 @@
 
         .sidebar {
             width: 250px;
-            background:rgb(68, 142, 222); /* Modern blue gradient */
+            background: rgb(68, 142, 222);
             color: #fff;
             min-height: 100vh;
             padding-top: 1rem;
@@ -42,13 +44,52 @@
         .content {
             flex: 1;
             padding: 20px;
-            background: #f4f6f9; /* Light background for contrast */
+            background: #f4f6f9;
         }
 
         .navbar {
             background-color: #fff;
             border-bottom: 1px solid #dee2e6;
         }
+
+        /* ✅ Dropdown Hover Fix */
+        .dropdown-menu .dropdown-item:hover {
+            background-color: #e6eaf0 !important;  /* Light blue/gray */
+            color: #000 !important;
+            font-weight: 500;
+        }
+
+        /* ✅ Optional: Hover highlight effect for Logout in red */
+        .dropdown-menu .dropdown-item.text-danger:hover {
+            background-color: #ffdddd !important;
+            color: #c82333 !important;
+        }
+    </style>
+
+    <style>
+    /* Scrollbar design */
+    .enquiry-table-wrapper {
+        max-height: 400px;
+        overflow-y: auto;
+        overflow-x: auto;
+    }
+
+    .enquiry-table-wrapper::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    .enquiry-table-wrapper::-webkit-scrollbar-thumb {
+        background-color: #aaa;
+        border-radius: 4px;
+    }
+    .enquiry-table-wrapper::-webkit-scrollbar-track {
+        background-color: #f1f1f1;
+    }
+
+    /* Fix pagination always to bottom right */
+    .pagination {
+        margin-bottom: 0;
+    }
     </style>
 
 </head>
@@ -58,24 +99,31 @@
 <!-- Sidebar -->
 <div class="sidebar">
     <h4 class="p-3">Dashboard</h4>
-    
-    <!--View All Enquiries--->
-    <a href="{{ route('enquiries.index') }}">📋 View Enquiries</a>
 
-    <!--View All Expenses --->
-    <a href="{{ route('expenses.index') }}">💸 View Expenses</a>
+    <!-- View All Enquiries -->
+    <a href="{{ route('enquiries.index') }}">
+        <i class="bi bi-card-list me-2"></i> View Enquiries
+    </a>
 
-    
-    <!--View All Revenue Summary --->
+    <!-- View All Expenses -->
+    <a href="{{ route('expenses.index') }}">
+        <i class="bi bi-cash-coin me-2"></i> View Expenses
+    </a>
+
+    <!-- View All Revenue Summary -->
     @auth
         @if(auth()->user()->role === 'superadmin')
-            <a href="{{ route('revenue.summary') }}">📈 Revenue Summary</a>
+            <a href="{{ route('revenue.summary') }}">
+                <i class="bi bi-graph-up-arrow me-2"></i> Revenue Summary
+            </a>
         @endif
     @endauth
 
-    <!--View Admin Adctivities --->
+    <!-- View Admin Activities -->
     @if(auth()->user()->role === 'superadmin')
-        <a href="{{ route('admin.activities') }}">🛠️ View Admin Activities</a>
+        <a href="{{ route('admin.activities') }}">
+            <i class="bi bi-tools me-2"></i> Admin Activities
+        </a>
     @endif
 </div>
 
@@ -85,35 +133,45 @@
     <nav class="navbar navbar-light px-4 d-flex justify-content-between align-items-center border-bottom" style="background: #fff;">
 
         <!-- Left: School Name -->
-        <div class="text-primary fw-bold fs-%">
-            🏫 Nhane Kadam
+        <div class="text-primary fw-bold fs-5">
+            <i class="bi bi-mortarboard-fill"></i> Nhane Kadam School
         </div>
 
+
+        <!-- User Dropdown -->
         <div class="dropdown">
-            <a class="btn btn-info text-white dropdown-toggle px-3 py-2" 
+            <a class="btn text-white dropdown-toggle px-3 py-2" 
             href="#" role="button" 
             id="userDropdown" 
             data-bs-toggle="dropdown" 
             aria-expanded="false"
-            style="border-radius: 8px;">
+            style="border-radius: 8px; background-color: rgb(68, 142, 222);">
                 {{ auth()->user()->name }}
             </a>
 
             <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown">
                 @auth
                     @if(auth()->user()->role === 'superadmin')
-                        <li><a class="dropdown-item" href="{{ route('admin.management') }}">🛠️ Admin Management</a></li>
+                        <li>
+                            <a class="dropdown-item" href="{{ route('admin.management') }}">
+                                <i class="bi bi-person-gear me-2"></i> Admin Management
+                            </a>
+                        </li>
                         <li><hr class="dropdown-divider"></li>
                     @endif
                 @endauth
                 <li>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <button type="submit" class="dropdown-item text-danger">🔒 Logout</button>
+                        <button type="submit" class="dropdown-item text-danger">
+                            <i class="bi bi-box-arrow-right me-2"></i> Logout
+                        </button>
                     </form>
                 </li>
             </ul>
         </div>
+
+
     </nav>
 
         
