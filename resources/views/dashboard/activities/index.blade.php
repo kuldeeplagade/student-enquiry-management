@@ -16,7 +16,7 @@
             <tbody>
                 @forelse($activities as $index => $activity)
                     <tr>
-                        <td>{{ $index + 1 }}</td>
+                         <td>{{ $activities->firstItem() + $index }}</td>
                         <td>{{ $activity->user->name }}</td>
                         <td>{{ $activity->activity_type }}</td>
                         <td>{{ $activity->description }}</td>
@@ -29,10 +29,7 @@
                 @endforelse
             </tbody>
         </table>
-    </div>
-     <!-- Pagination -->
-    <div class="d-flex justify-content-end mt-3">
-        {{ $activities->links() }}
-    </div>
-    
+        {{-- pagination--}}
+        @include('components.shared-pagination', ['paginator' => $activities])
+    </div> 
 @endsection

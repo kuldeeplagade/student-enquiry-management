@@ -55,11 +55,12 @@
                 @endforelse
             </tbody>
         </table>
+        
+        {{--  Add pagination below the table --}}
+        @include('components.shared-pagination', ['paginator' => $enquiries])
     </div>
 </div>
 
-<!-- Pagination aligned bottom-right -->
-<div class="mt-3 d-flex justify-content-end">
-    {{ $enquiries->appends(['class' => $selectedClass])->links() }}
-</div>
+
+
 @endsection
