@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth; 
 use App\Models\Expense;
 use App\Models\Payment;
@@ -10,28 +11,33 @@ use App\Models\Enquiry;
 
 class ExpenseController extends Controller
 {
-    //Total Expenses & Net Profit 
-    public function revenueSummary()
+    // Total Expenses, Revenue, Net Profit and Expected Revenue (with optional month filter)
+    public function revenueSummary(Request $request)
     {
-        $totalRevenue = Payment::sum('amount_paid');
-        $totalExpenses = Expense::sum('amount');
-        $netProfit = $totalRevenue - $totalExpenses;
+        $month = $request->input('month', Carbon::now()->format('m'));
+        $year = $request->input('year', Carbon::now()->format('Y'));
 
-        //  New addition
-        $expectedRevenue = Enquiry::sum('total_amount'); // from enquiries table
+        $startDate = Carbon::createFromDate($year, $month, 1)->startOfMonth();
+        $endDate = Carbon::createFromDate($year, $month, 1)->endOfMonth();
+
+        $totalRevenue = Payment::whereBetween('created_at', [$startDate, $endDate])->sum('amount_paid');
+        $totalExpenses = Expense::whereBetween('date', [$startDate, $endDate])->sum('amount');
+        $expectedRevenue = Enquiry::sum('total_amount');
+        $netProfit = $totalRevenue - $totalExpenses;
 
         return view('dashboard.expenses.revenue-summary', compact(
             'totalRevenue',
             'totalExpenses',
             'netProfit',
-            'expectedRevenue'
+            'expectedRevenue',
+            'month',
+            'year'
         ));
     }
 
-
     public function index()
     {
-        $expenses = Expense::orderBy('date', 'desc')->get();
+        $expenses = Expense::orderBy('date', 'desc')->paginate(5);
         $total = $expenses->sum('amount');
         return view('dashboard.expenses.index', compact('expenses', 'total'));
     }

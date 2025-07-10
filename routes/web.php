@@ -7,6 +7,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\AdminActivityController;
+use App\Http\Controllers\AdminManagementController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,6 +50,14 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/revenue-summary', [ExpenseController::class, 'revenueSummary'])->name('revenue.summary');
 
+
+    //Admin Management 
+    Route::get('/admin-management', [AdminManagementController::class, 'index'])->name('admin.management');
+
+    Route::get('/admin/change-password/{id}', [AdminManagementController::class, 'editPassword'])->name('admin.password.edit');
+    Route::post('/admin/change-password/{id}', [AdminManagementController::class, 'updatePassword'])->name('admin.password.update');
+
+
 });
 
 //Payment Related Routes 
@@ -69,11 +78,14 @@ Route::get('/admin-activities', [AdminActivityController::class, 'index'])
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
 // Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard')->middleware('auth');
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('/logout', function () {
+    \Auth::logout();
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+    return redirect('/login');
+})->name('logout');
 
-// Route::get('/dashboard', function () {
-//     return "Welcome! You're logged in.";
-// })->middleware('auth');
+
 
 
 

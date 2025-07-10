@@ -1,7 +1,9 @@
 @extends('dashboard')
 
 @section('content')
-<h2 class="mb-4">Enquiry List</h2>
+<h2 class="mb-4">
+    <i class="bi bi-journal-text text-dark fs-7 me-2"></i>Enquiry List
+</h2>
 
 <form method="GET" action="{{ route('enquiries.index') }}" class="mb-3">
     <div class="row">
@@ -10,9 +12,7 @@
                 <option value="All" {{ $selectedClass == 'All' ? 'selected' : '' }}>All</option>
                 @if(is_array($classes))
                     @foreach($classes as $class)
-                        <option value="{{ $class }}" {{ $selectedClass == $class ? 'selected' : '' }}>
-                            {{ $class }}
-                        </option>
+                        <option value="{{ $class }}" {{ $selectedClass == $class ? 'selected' : '' }}>{{ $class }}</option>
                     @endforeach
                 @endif
             </select>
@@ -21,8 +21,8 @@
 </form>
 
 <div class="card">
-    <div class="card-body p-0">
-        <table class="table table-bordered table-hover">
+    <div class="card-body p-0 enquiry-table-wrapper">
+        <table class="table table-bordered table-hover mb-0">
             <thead class="table-dark">
                 <tr>
                     <th>ID</th>
@@ -34,10 +34,11 @@
                 </tr>
             </thead>
             <tbody>
+                @php $index = ($enquiries->currentPage() - 1) * $enquiries->perPage() + 1; @endphp
                 @forelse($enquiries as $enquiry)
                 <tr>
-                    <td>{{ $enquiry->id }}</td>
-                    <td>{{ $enquiry->surname }} {{ $enquiry->first_name }}</td>
+                    <td>{{ $index++ }}</td>
+                    <td>{{ $enquiry->first_name }} {{ $enquiry->surname }}</td>
                     <td>{{ $enquiry->dob }}</td>
                     <td>{{ $enquiry->father_mobile }}</td>
                     <td>{{ $enquiry->admission_for }}</td>
@@ -55,5 +56,10 @@
             </tbody>
         </table>
     </div>
+</div>
+
+<!-- Pagination aligned bottom-right -->
+<div class="mt-3 d-flex justify-content-end">
+    {{ $enquiries->appends(['class' => $selectedClass])->links() }}
 </div>
 @endsection

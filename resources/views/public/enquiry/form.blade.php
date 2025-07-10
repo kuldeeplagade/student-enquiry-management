@@ -1,9 +1,21 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="card shadow p-4">
-    <h3 class="mb-4 text-primary">Student Enquiry Form</h3>
+<!-- Top Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-4 mb-4">
+    <div class="container-fluid">
+        <h4 class="mb-0 text-primary fw-semibold">📋 Student Enquiry Form</h4>
 
+        <div class="ms-auto">
+            <a href="{{ route('login') }}" class="btn btn-outline-primary btn-sm">
+                🔐 Admin Login
+            </a>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Card -->
+<div class="card shadow-sm border-0 p-4 mb-5">
     @if(session('success'))
     <script>
         window.addEventListener('DOMContentLoaded', function () {
@@ -14,26 +26,27 @@
     @endif
 
     @if($errors->any())
-        <div class="alert alert-danger">
-            <ul class="mb-0">
-                @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
+    <div class="alert alert-danger">
+        <ul class="mb-0">
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
     @endif
 
     <form action="{{ route('enquiry.store') }}" method="POST">
         @csrf
 
-        <div class="row mb-3">
+        {{-- Basic Info --}}
+        <div class="row mb-4">
             <div class="col-md-4">
                 <label class="form-label">Surname <span class="text-danger">*</span></label>
-                <input type="text" name="surname" class="form-control" value="{{ old('surname') }}" required>
+                <input type="text" name="surname" class="form-control" required value="{{ old('surname') }}">
             </div>
             <div class="col-md-4">
                 <label class="form-label">First Name <span class="text-danger">*</span></label>
-                <input type="text" name="first_name" class="form-control" value="{{ old('first_name') }}" required>
+                <input type="text" name="first_name" class="form-control" required value="{{ old('first_name') }}">
             </div>
             <div class="col-md-4">
                 <label class="form-label">Middle Name</label>
@@ -41,10 +54,10 @@
             </div>
         </div>
 
-        <div class="row mb-3">
+        <div class="row mb-4">
             <div class="col-md-4">
                 <label class="form-label">Date of Birth <span class="text-danger">*</span></label>
-                <input type="date" name="dob" class="form-control" value="{{ old('dob') }}" required>
+                <input type="date" name="dob" class="form-control" required value="{{ old('dob') }}">
             </div>
             <div class="col-md-4">
                 <label class="form-label">Sex <span class="text-danger">*</span></label>
@@ -61,43 +74,35 @@
             </div>
         </div>
 
-<div class="row mb-3">
-    <div class="col-md-4">
-        <label class="form-label">Father's Mobile No. <span class="text-danger">*</span></label>
-        <input type="text" name="father_mobile" class="form-control"
-               placeholder="Enter 10-digit mobile (without +91)"
-               value="{{ old('father_mobile') }}" required
-               pattern="\d{10}" maxlength="10" minlength="10"
-               title="Enter 10-digit mobile number without +91">
-
-        </div>
+        {{-- Parent Contact Info --}}
+        <div class="row mb-4">
             <div class="col-md-4">
-                <label class="form-label">Mother's Mobile No.<span class="text-danger">*</span></label>
-                <input type="text" name="mother_mobile" class="form-control"
-                    placeholder="Enter 10-digit mobile (without +91)"
-                    value="{{ old('mother_mobile') }}" required
-                    pattern="\d{10}" maxlength="10" minlength="10"
-                    title="Enter 10-digit mobile number without +91">
+                <label class="form-label">Father's Mobile <span class="text-danger">*</span></label>
+                <input type="text" name="father_mobile" class="form-control" required pattern="\d{10}" maxlength="10" value="{{ old('father_mobile') }}">
             </div>
             <div class="col-md-4">
-                <label class="form-label">Landline No.</label>
+                <label class="form-label">Mother's Mobile <span class="text-danger">*</span></label>
+                <input type="text" name="mother_mobile" class="form-control" required pattern="\d{10}" maxlength="10" value="{{ old('mother_mobile') }}">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Landline</label>
                 <input type="text" name="landline" class="form-control" value="{{ old('landline') }}">
             </div>
         </div>
 
-        <div class="mb-3">
+        <div class="mb-4">
             <label class="form-label">Email</label>
-            <input type="email" name="email" class="form-control" placeholder="Enter valid email" value="{{ old('email') }}">
+            <input type="email" name="email" class="form-control" placeholder="example@email.com" value="{{ old('email') }}">
         </div>
 
-        <!-- Address -->
-        <h5 class="text-primary mt-4">Address Details</h5>
+        {{-- Address --}}
+        <h5 class="text-primary fw-semibold">🏠 Address Details</h5>
         <div class="mb-3">
-            <label class="form-label">Address</label>
+            <label class="form-label">Full Address</label>
             <textarea name="address" class="form-control" rows="2">{{ old('address') }}</textarea>
         </div>
 
-        <div class="row mb-3">
+        <div class="row mb-4">
             <div class="col-md-4">
                 <label class="form-label">State</label>
                 <input type="text" name="state" class="form-control" value="{{ old('state') }}">
@@ -112,12 +117,11 @@
             </div>
         </div>
 
-        <!-- Siblings -->
-        <h5 class="text-primary mt-4">Siblings / Reference Details</h5>
-
+        {{-- Siblings --}}
+        <h5 class="text-primary fw-semibold">👨‍👩‍👧‍👦 Sibling / Reference Info</h5>
         <div class="row mb-3">
             <div class="col-md-4">
-                <label class="form-label">Sibling Name (1)</label>
+                <label class="form-label">Sibling 1 Name</label>
                 <input type="text" name="sibling1_name" class="form-control" value="{{ old('sibling1_name') }}">
             </div>
             <div class="col-md-4">
@@ -135,9 +139,9 @@
             </div>
         </div>
 
-        <div class="row mb-3">
+        <div class="row mb-4">
             <div class="col-md-4">
-                <label class="form-label">Sibling Name (2)</label>
+                <label class="form-label">Sibling 2 Name</label>
                 <input type="text" name="sibling2_name" class="form-control" value="{{ old('sibling2_name') }}">
             </div>
             <div class="col-md-4">
@@ -155,14 +159,13 @@
             </div>
         </div>
 
-        <!--Submit button--->
         <div class="text-end">
-            <button type="submit" class="btn btn-success">Submit Enquiry</button>
+            <button type="submit" class="btn btn-success px-4">✅ Submit Enquiry</button>
         </div>
     </form>
 
-    <div class="mt-4">
-        <p class="text-muted">Are you an Admin or Superadmin? <a href="{{ route('login') }}">Login here</a></p>
+    <div class="mt-4 text-end">
+        <small class="text-muted">Already registered as Admin or Superadmin? <a href="{{ route('login') }}">Login here</a></small>
     </div>
 </div>
 
@@ -172,7 +175,7 @@
   <div class="modal-dialog">
     <div class="modal-content bg-light">
       <div class="modal-header">
-        <h5 class="modal-title text-success" id="successModalLabel">Success</h5>
+        <h5 class="modal-title text-success" id="successModalLabel">✅ Success</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -186,3 +189,4 @@
 </div>
 @endif
 @endsection
+        

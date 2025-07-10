@@ -2,14 +2,16 @@
 
 @section('content')
 <div class="container">
-    <h2 class="mb-3">Expense Summary</h2>
+    <h2 class="mb-3"> 
+        <i class="bi bi-cash-coin text-dark fs-5 me-2"></i>Expense Summary
+    </h2>
 
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
     <div class="mb-3">
-        <a href="{{ route('expenses.create') }}" class="btn btn-primary">➕ Add Expense</a>
+        <a href="{{ route('expenses.create') }}" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Add Expense</a>  
     </div>
 
     <div class="card mb-4">
@@ -17,6 +19,8 @@
             <h5><strong>Total Expenses (₹):</strong> {{ number_format($total, 2) }}</h5>
         </div>
     </div>
+
+
 
 <table class="table table-bordered">
     <thead>
@@ -32,7 +36,7 @@
     <tbody>
         @forelse ($expenses as $expense)
             <tr>
-                <td>{{ $expense->id }}</td>
+                 <td>{{ ($expenses->currentPage() - 1) * $expenses->perPage() + $loop->iteration }}</td>
                 <td>{{ $expense->title }}</td>
                 <td>₹{{ number_format($expense->amount, 2) }}</td>
                 <td>{{ \Carbon\Carbon::parse($expense->date)->format('d-m-Y') }}</td>
@@ -52,6 +56,11 @@
         @endforelse
     </tbody>
 </table>
-
 </div>
+
+    <!-- Pagination -->
+    <div class="d-flex justify-content-end mt-3">
+        {{ $expenses->links() }}
+    </div>
+
 @endsection
