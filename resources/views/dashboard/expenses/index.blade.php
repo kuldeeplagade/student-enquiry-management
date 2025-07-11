@@ -56,11 +56,10 @@
         @endforelse
     </tbody>
 </table>
+        {{-- pagination--}}
+        @include('components.shared-pagination', ['paginator' => $expenses])
 </div>
 
-    <!-- Pagination -->
-    <div class="d-flex justify-content-end mt-3">
-        {{ $expenses->links() }}
-    </div>
+
 
 @endsection
