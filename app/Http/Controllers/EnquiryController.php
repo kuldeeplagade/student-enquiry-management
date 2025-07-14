@@ -66,16 +66,28 @@ class EnquiryController extends Controller
     public function index(Request $request)
     {
         $selectedClass = $request->get('class', 'All');
+        $search = $request->get('search');
         $classes = ['Playgroup', 'Nursery', 'Jr.KG', 'Sr.KG'];
 
         $enquiries = Enquiry::when($selectedClass !== 'All', function ($query) use ($selectedClass) {
-            return $query->where('admission_for', $selectedClass);
-        })
-        ->orderBy('id', 'desc')       //  Newest enquiries first
-        ->paginate(5);               //  Paginate (10 per page)
+                return $query->where('admission_for', $selectedClass);
+            })
+            ->when($search, function ($query) use ($search) {
+                return $query->where(function ($q) use ($search) {
+                    $q->where('first_name', 'like', "%{$search}%")
+                    ->orWhere('surname', 'like', "%{$search}%")
+                    ->orWhere('father_mobile', 'like', "%{$search}%")
+                    ->orWhere('middle_name', 'like', "%{$search}%");
+                });
+            })
+            ->orderBy('id', 'desc')
+            ->paginate(5)
+            ->withQueryString(); // Keeps search params in pagination links
 
-        return view('dashboard.enquiries.index', compact('enquiries', 'classes', 'selectedClass'));
+        return view('dashboard.enquiries.index', compact('enquiries', 'classes', 'selectedClass', 'search'));
     }
+
+
 
     //View Enquiry by id for update 
     public function edit($id)

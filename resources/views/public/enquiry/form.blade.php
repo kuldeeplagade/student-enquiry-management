@@ -7,6 +7,7 @@
         <h4 class="mb-0 fw-bold" style="font-family: 'Comic Sans MS', cursive; color: #6B297D;">
             <i class="bi bi-person-vcard me-2"></i> Student Enquiry Form
         </h4>
+
     </div>
 </nav>
 
@@ -37,7 +38,7 @@
         {{-- Basic Info --}}
         <div class="row mb-4">
             <div class="col-md-4 mb-3">
-                <label class="form-label">Surname <span class="text-danger">*</span></label>
+                <label class="form-label">Surname <span class="text-">*</span></label>
                 <input type="text" name="surname" class="form-control rounded-pill shadow-sm" required value="{{ old('surname') }}">
             </div>
             <div class="col-md-4 mb-3">
