@@ -23,12 +23,11 @@
     </div>
 </form>
 
+    <!-- Search  Button  -->
     <form method="GET" class="d-flex mb-3">
         <input type="text" name="search" class="form-control me-2" placeholder="Search..." value="{{ request('search') }}">
         <button type="submit" class="btn btn-outline-primary">Search</button>
     </form>
-
-
 
 <div class="card shadow-sm border-0">
     <div class="card-body p-0 enquiry-table-wrapper">
