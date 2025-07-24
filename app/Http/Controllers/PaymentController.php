@@ -41,13 +41,13 @@ class PaymentController extends Controller
             $enquiry->save();
             $feeJustSet = true;
         }
-
+        
         //  Log only if it was just set
         if ($feeJustSet) {
             $class = $enquiry->admission_for ?? 'Class Not Set';
             ActivityLogger::log(
                 'Total Fee Set',
-                '🎯 Total fee of ₹' . $enquiry->total_amount . ' set for ' . $enquiry->first_name . ' ' . $enquiry->last_name . ' (' . $class . ')'
+                'Total fee of ₹' . $enquiry->total_amount . ' set for ' . $enquiry->first_name . ' ' . $enquiry->last_name . ' (' . $class . ')'
             );
         }
 
@@ -78,7 +78,7 @@ class PaymentController extends Controller
 
         ActivityLogger::log(
             'Payment Added',
-            "💰 ₹{$amount} paid by {$name} ({$class}) via {$mode}"
+            "₹{$amount} paid by {$name} ({$class}) via {$mode}"
         );
 
         return redirect()->route('payments.index', $enquiry->id)->with('success', ' Payment recorded successfully.');

@@ -52,44 +52,18 @@
             border-bottom: 1px solid #dee2e6;
         }
 
-        /* ✅ Dropdown Hover Fix */
+        /*  Dropdown Hover Fix */
         .dropdown-menu .dropdown-item:hover {
             background-color: #e6eaf0 !important;  /* Light blue/gray */
             color: #000 !important;
             font-weight: 500;
         }
 
-        /* ✅ Optional: Hover highlight effect for Logout in red */
+        /*  Optional: Hover highlight effect for Logout in red */
         .dropdown-menu .dropdown-item.text-danger:hover {
             background-color: #ffdddd !important;
             color: #c82333 !important;
         }
-    </style>
-
-    <style>
-    /* Scrollbar design */
-    .enquiry-table-wrapper {
-        max-height: 400px;
-        overflow-y: auto;
-        overflow-x: auto;
-    }
-
-    .enquiry-table-wrapper::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
-    }
-    .enquiry-table-wrapper::-webkit-scrollbar-thumb {
-        background-color: #aaa;
-        border-radius: 4px;
-    }
-    .enquiry-table-wrapper::-webkit-scrollbar-track {
-        background-color: #f1f1f1;
-    }
-
-    /* Fix pagination always to bottom right */
-    .pagination {
-        margin-bottom: 0;
-    }
     </style>
 
 </head>
@@ -134,7 +108,7 @@
 
         <!-- Left: School Name -->
         <div class="text-primary fw-bold fs-5">
-            <i class="bi bi-mortarboard-fill"></i> Nhane Kadam School
+            <i class="bi bi-mortarboard-fill"></i> Hamare Nhane Kadam School
         </div>
 
 
@@ -170,8 +144,6 @@
                 </li>
             </ul>
         </div>
-
-
     </nav>
 
         

@@ -42,10 +42,11 @@
 
 <header class="bg-white shadow-sm py-2 main-header">
     <div class="container-fluid px-4 d-flex align-items-center justify-content-between">
-        <!-- Logo -->
-        <div class="d-flex align-items-center">
-            <img src="{{ asset('images/logo.jpeg') }}" alt="Logo" style="height: 60px;">
-        </div>
+    <!-- Logo -->
+    <div class="d-flex align-items-center ps-md-3">
+        <img src="{{ asset('images/logo.jpeg') }}" alt="Logo" style="height: 100px;">
+    </div>
+
 
         <!-- Navbar -->
         <nav class="d-none d-md-flex gap-4 justify-content-center flex-grow-1">
@@ -63,7 +64,8 @@
 
 
         <!-- Contact Info -->
-        <div class="d-flex align-items-center gap-2">
+        <!-- Phone Info -->
+        <div class="d-flex align-items-center gap-2 pe-md-4">
             <div class="call-circle">
                 <i class="bi bi-telephone-fill call-icon"></i>
             </div>

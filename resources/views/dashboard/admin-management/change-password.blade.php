@@ -2,21 +2,32 @@
 
 @section('content')
 <div class="container mt-4">
-    <h4 class="mb-4">🔑 Change Password for {{ $user->name }}</h4>
+    <h4 class="mb-4 d-flex align-items-center">
+        <i class="bi bi-shield-lock-fill text-primary me-2 fs-4"></i>
+        Change Password for <span class="ms-1">{{ $user->name }}</span>
+    </h4>
 
+    {{-- ✅ Success Message --}}
     @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
+        <div class="alert alert-success d-flex align-items-center" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            {{ session('success') }}
+        </div>
     @endif
 
+    {{-- ✅ Password Change Form --}}
     <form method="POST" action="{{ route('admin.password.update', $user->id) }}">
         @csrf
 
         {{-- New Password --}}
-        <div class="mb-3 position-relative">
+        <div class="mb-3">
             <label for="password" class="form-label">New Password</label>
             <div class="input-group">
-                <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror" required minlength="6">
-                <span class="input-group-text" style="cursor: pointer;" onclick="togglePassword('password', this)">
+                <input type="password" name="password" id="password"
+                    class="form-control @error('password') is-invalid @enderror"
+                    required minlength="6">
+                <span class="input-group-text" onclick="togglePassword(this, 'password')" style="cursor: pointer;">
+                    <i class="bi bi-eye"></i>
                 </span>
             </div>
             @error('password')
@@ -25,24 +36,36 @@
         </div>
 
         {{-- Confirm Password --}}
-        <div class="mb-3 position-relative">
+        <div class="mb-4">
             <label for="password_confirmation" class="form-label">Confirm Password</label>
             <div class="input-group">
-                <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" required>
-                <span class="input-group-text" style="cursor: pointer;" onclick="togglePassword('password_confirmation', this)">
+                <input type="password" name="password_confirmation" id="password_confirmation"
+                    class="form-control" required>
+                <span class="input-group-text" onclick="togglePassword(this, 'password_confirmation')" style="cursor: pointer;">
+                    <i class="bi bi-eye"></i>
                 </span>
             </div>
         </div>
 
-        <button type="submit" class="btn btn-primary">Update Password</button>
+        {{-- ✅ Submit and Back Buttons --}}
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-outline-primary">
+                <i class="bi bi-save me-1"></i> Update Password
+            </button>
+
+            <a href="{{ route('admin.management') }}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left-circle me-1"></i> Back to Admin Management
+            </a>
+        </div>
     </form>
 </div>
 
-{{-- Password toggle JS --}}
+{{-- ✅ Toggle Password JS --}}
 <script>
-    function togglePassword(fieldId, btn) {
+    function togglePassword(span, fieldId) {
         const input = document.getElementById(fieldId);
-        const icon = btn.querySelector('i');
+        const icon = span.querySelector('i');
+
         if (input.type === 'password') {
             input.type = 'text';
             icon.classList.remove('bi-eye');
@@ -54,7 +77,4 @@
         }
     }
 </script>
-
-{{-- Bootstrap Icons --}}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 @endsection

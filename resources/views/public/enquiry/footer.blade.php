@@ -47,7 +47,7 @@
       </div>
 
       <!-- Links -->
-       <div class="col-md-2 mb-4 pe-1">
+       <div class="col-md-2 mb-4 pe-`">
         <h5 class="fw-bold mb-3" style="font-family: 'Fredoka', sans-serif;">Links</h5>
         <ul class="list-unstyled small">
             <li class="mb-2"><a href="http://localhost:8081/hnk_web/#home" class="footer-link">Home</a></li>
@@ -82,7 +82,7 @@
       <p class="mb-0">
         © Copyright by 2025 Hamare Nanhe Kadam.<br>
         Website design and development by 
-        <a href="#" class="text-decoration-none text-purple">Infinity Dsign</a>
+        <a href="https://infinitydsign.com" class="text-decoration-none text-purple">Infinity Dsign</a>
       </p>
     </div>
   </div>
