@@ -20,8 +20,11 @@ class CreateEnquiriesTable extends Migration
             $table->string('mother_mobile')->nullable();
             $table->string('landline')->nullable();
             $table->string('email')->nullable();
-            $table->enum('admission_for', ['Playgroup', 'Nursery', 'Jr.KG', 'Sr.KG']);
-            $table->decimal('total_amount', 10, 2)->nullable();
+            $table->string('branch_name')->nullable();
+            $table->enum('admission_for', ['Playgroup', 'Nursery', 'Jr.KG', 'Sr.KG', 'Day Care']);
+            $table->decimal('default_fee', 10, 2);
+            $table->decimal('discount_amount', 10, 2)->nullable();
+            $table->decimal('final_fee', 10, 2)->nullable();
             $table->string('sibling1_name')->nullable();
             $table->enum('sibling1_sex', ['Male', 'Female', 'Other'])->nullable();
             $table->date('sibling1_dob')->nullable();

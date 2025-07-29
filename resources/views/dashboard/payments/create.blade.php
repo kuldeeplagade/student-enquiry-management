@@ -9,12 +9,35 @@
             <form action="{{ route('payments.store', $enquiry->id) }}" method="POST">
                 @csrf
 
-                @if (is_null($enquiry->total_amount))
-                <div class="mb-3">
-                    <label for="total_amount" class="form-label fw-bold">Set Total Fee (₹)</label>
-                    <input type="number" name="total_amount" class="form-control" required>
-                </div>
-                @endif
+@if (is_null($enquiry->default_fee))
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <label for="default_fee" class="form-label fw-bold">Base Fee (₹)</label>
+        <input type="number" name="default_fee" id="default_fee" class="form-control" required oninput="calculateFinalFee()">
+    </div>
+
+    <div class="col-md-4">
+        <label for="discount_amount" class="form-label fw-bold">Discount (₹)</label>
+        <input type="number" name="discount_amount" id="discount_amount" class="form-control" value="0" oninput="calculateFinalFee()">
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label fw-bold">Final Payable Fee (₹)</label>
+        <input type="text" id="final_fee_display" class="form-control bg-light" readonly>
+    </div>
+</div>
+
+<script>
+    function calculateFinalFee() {
+        const base = parseFloat(document.getElementById('default_fee').value) || 0;
+        const discount = parseFloat(document.getElementById('discount_amount').value) || 0;
+        const final = base - discount;
+        document.getElementById('final_fee_display').value = final > 0 ? final.toFixed(2) : 0;
+    }
+</script>
+@endif
+
+
 
 
                 <div class="row g-3">

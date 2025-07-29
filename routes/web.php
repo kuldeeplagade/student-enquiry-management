@@ -8,6 +8,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\AdminActivityController;
 use App\Http\Controllers\AdminManagementController;
+use App\Http\Controllers\ReportsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,6 +51,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/revenue-summary', [ExpenseController::class, 'revenueSummary'])->name('revenue.summary');
 
+    Route::get('/dashboard/reports', [ReportsController::class, 'index'])->name('reports.index');
+
 
     //Admin Management 
     Route::get('/admin-management', [AdminManagementController::class, 'index'])->name('admin.management');
@@ -66,6 +69,15 @@ Route::prefix('dashboard')->middleware('auth')->group(function () {
     Route::get('/enquiries/{id}/payments/create', [PaymentController::class, 'create'])->name('payments.create'); // Show add form
     Route::post('/enquiries/{id}/payments', [PaymentController::class, 'store'])->name('payments.store'); // Save new payment
 });
+
+Route::prefix('dashboard/reports')->middleware(['auth'])->group(function () {
+    Route::get('/', [ReportsController::class, 'index'])->name('reports.index');
+    Route::get('/revenue', [ReportsController::class, 'revenue'])->name('reports.revenue');
+    Route::get('/expenses', [ReportsController::class, 'expenses'])->name('reports.expenses');
+});
+
+
+Route::post('/payments/{id}/discount', [PaymentController::class, 'setDiscount'])->name('discount.update');
 
 
 //SuperAdmin Check the Activity in All Admins

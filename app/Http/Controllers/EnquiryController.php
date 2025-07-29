@@ -31,6 +31,7 @@ class EnquiryController extends Controller
         'mother_mobile' => 'nullable|digits:10', // This expects exactly 10 digits if provided
         'landline' => 'nullable|string|max:15',
         'email' => 'nullable|email|max:100',
+        'branch_name' => ['required', Rule::in(['Mumbai Branch 1', 'Mumbai Branch 2'])], //Addded Two default branch after chnage this in actual name  
 
         'sibling1_name' => 'nullable|string|max:100',
         'sibling1_sex' => 'nullable|in:Male,Female,Other',
@@ -49,7 +50,20 @@ class EnquiryController extends Controller
         'mother_mobile.digits' => 'Mother mobile must be exactly 10 digits.',
     ]);
 
-        Enquiry::create($request->all());
+        $defaultFees = [
+            'Playgroup' => 15000,
+            'Nursery' => 13000,
+            'Jr.KG' => 14000,
+            'Sr.KG' => 14500,
+            'Day Care' => 10000,
+        ];
+
+        $data = $request->all();
+        $data['default_fee'] = $defaultFees[$request->admission_for] ?? 0;
+        $data['discount_amount'] = $request->discount_amount ?? 0;
+
+        Enquiry::create($data);
+
 
         return redirect()->back()->with('success', 'Enquiry submitted successfully!');
     }
@@ -67,7 +81,7 @@ class EnquiryController extends Controller
     {
         $selectedClass = $request->get('class', 'All');
         $search = $request->get('search');
-        $classes = ['Playgroup', 'Nursery', 'Jr.KG', 'Sr.KG'];
+        $classes = ['Playgroup', 'Nursery', 'Jr.KG', 'Sr.KG', 'Day Care'];
 
         $enquiries = Enquiry::when($selectedClass !== 'All', function ($query) use ($selectedClass) {
                 return $query->where('admission_for', $selectedClass);
@@ -111,7 +125,8 @@ class EnquiryController extends Controller
                 'mother_mobile' => 'nullable|string',
                 'landline' => 'nullable|string',
                 'email' => 'nullable|email',
-                'admission_for' => 'required|in:Playgroup,Nursery,Jr.KG,Sr.KG',
+                'branch_name' => ['required', Rule::in(['Mumbai Branch 1', 'Mumbai Branch 2'])],
+                'admission_for' => 'required|in:Playgroup,Nursery,Jr.KG,Sr.KG,Day Care',
                 'sibling1_name' => 'nullable|string',
                 'sibling1_sex' => 'nullable|in:Male,Female,Other',
                 'sibling1_dob' => 'nullable|date',

@@ -22,7 +22,7 @@ class ExpenseController extends Controller
 
         $totalRevenue = Payment::whereBetween('created_at', [$startDate, $endDate])->sum('amount_paid');
         $totalExpenses = Expense::whereBetween('date', [$startDate, $endDate])->sum('amount');
-        $expectedRevenue = Enquiry::sum('total_amount');
+        $expectedRevenue = Enquiry::sum('final_fee');
         $netProfit = $totalRevenue - $totalExpenses;
 
         return view('dashboard.expenses.revenue-summary', compact(
@@ -53,6 +53,9 @@ class ExpenseController extends Controller
             'title' => 'required|string|max:255',
             'amount' => 'required|numeric|min:0',
             'date' => 'required|date',
+            'payment_mode' => 'required|string|in:Cash,UPI,Bank Transfer,Cheque,Other',
+            'category' => 'required|string|in:Stationery,Teacher Salary,Rent,Maintenance,Other',
+            'branch_name' =>'required|string|in:Mumbai Branch 1,Mumbai Branch 2',
             'notes' => 'nullable|string',
         ]);
 
@@ -65,6 +68,7 @@ class ExpenseController extends Controller
         }
     }
 
+
     public function edit($id)
     {
         $expense = Expense::findOrFail($id);
@@ -76,6 +80,9 @@ class ExpenseController extends Controller
         $request->validate([
             'title' => 'required|string',
             'amount' => 'required|numeric|min:0',
+            'payment_mode' => 'required|string|in:Cash,UPI,Bank Transfer,Cheque,Other',
+            'category' => 'required|string|in:Stationery,Teacher Salary,Rent,Maintenance,Other',
+            'branch_name' =>'required|string|in:Mumbai Branch 1,Mumbai Branch 2',
             'date' => 'required|date',
             'notes' => 'nullable|string',
         ]);

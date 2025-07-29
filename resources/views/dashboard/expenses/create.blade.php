@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-    <h2 class="mb-4">Add New Expense</h2>
+    <h2 class="mb-4"><i class="bi bi-cash"></i> Add New Expense</h2>
 
     @if(session('error'))
         <div class="alert alert-danger">{{ session('error') }}</div>
@@ -10,6 +10,7 @@
 
     <form method="POST" action="{{ route('expenses.store') }}">
         @csrf
+
         <div class="mb-3">
             <label class="form-label">Title <span class="text-danger">*</span></label>
             <input type="text" name="title" class="form-control" required>
@@ -26,11 +27,46 @@
         </div>
 
         <div class="mb-3">
+            <label class="form-label">Payment Mode <span class="text-danger">*</span></label>
+            <select name="payment_mode" class="form-select" required>
+                <option value="">--Select Payment Mode--</option>
+                <option value="Cash">Cash</option>
+                <option value="UPI">UPI</option>
+                <option value="Bank Transfer">Bank Transfer</option>
+                <option value="Cheque">Cheque</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Expense Category <span class="text-danger">*</span></label>
+            <select name="category" class="form-select" required>
+                <option value="">--Select Category--</option>
+                <option value="Stationery">Stationery</option>
+                <option value="Teacher Salary">Teacher Salary</option>
+                <option value="Rent">Rent</option>
+                <option value="Maintenance">Maintenance</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Branch Name <span class="text-danger">*</span></label>
+            <select name="branch_name" class="form-control" required>
+                <option value="">-- Select Branch --</option>
+                <option value="Mumbai Branch 1">Mumbai Branch 1</option>
+                <option value="Mumbai Branch 2">Mumbai Branch 2</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
             <label class="form-label">Notes</label>
             <textarea name="notes" class="form-control" rows="3"></textarea>
         </div>
 
-        <button type="submit" class="btn btn-success">💾 Save Expense</button>
+        <button type="submit" class="btn btn-success">
+            <i class="bi bi-save me-1"></i> Save Expense
+        </button>
     </form>
 </div>
 @endsection
