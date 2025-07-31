@@ -12,7 +12,17 @@ class Expense extends Model
     protected $fillable = [
     'title', 
     'amount',
+    'payment_mode',
+    'category_id',
+    'branch_name',
     'date',
     'notes'
-];
+];  
+
+    public function category()
+    {
+        return $this->belongsTo(ExpenseCategory::class, 'category_id');
+    }
+
 }
+

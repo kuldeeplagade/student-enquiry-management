@@ -99,6 +99,22 @@
             <i class="bi bi-tools me-2"></i> Admin Activities
         </a>
     @endif
+
+    <!-- View Detailed Report -->
+    @if(auth()->user()->role === 'superadmin')
+        <a href="{{ route('reports.revenue') }}">
+            <i class="bi bi-bar-chart-line-fill me-2"></i> Revenue Report
+        </a>
+    @endif
+
+    <!-- View Detailed Report -->
+    @if(auth()->user()->role === 'superadmin')
+        <a href="{{ route('reports.expenses') }}">
+            <i class="bi bi-receipt me-2"></i> Expense Report
+        </a>
+    @endif
+
+
 </div>
 
 <!-- Content -->

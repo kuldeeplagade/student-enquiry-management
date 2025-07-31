@@ -11,6 +11,7 @@
                 @method('PUT')
 
                 <div class="row g-3">
+                    {{-- Personal Info --}}
                     <div class="col-md-4">
                         <label class="form-label">Surname</label>
                         <input type="text" class="form-control" name="surname" value="{{ old('surname', $enquiry->surname) }}" required>
@@ -25,12 +26,11 @@
                     </div>
 
                     <div class="col-md-4">
-                        <label class="form-label">DOB</label>
+                        <label class="form-label">Date of Birth</label>
                         <input type="date" class="form-control" name="dob" value="{{ old('dob', $enquiry->dob) }}" required>
                     </div>
-
                     <div class="col-md-4">
-                        <label class="form-label">Sex</label>
+                        <label class="form-label">Gender</label>
                         <select name="sex" class="form-select" required>
                             <option value="">Select</option>
                             @foreach(['Male', 'Female', 'Other'] as $sex)
@@ -38,53 +38,61 @@
                             @endforeach
                         </select>
                     </div>
-
                     <div class="col-md-4">
                         <label class="form-label">Blood Group</label>
                         <input type="text" class="form-control" name="blood_group" value="{{ old('blood_group', $enquiry->blood_group) }}">
                     </div>
 
+                    {{-- Contact Info --}}
                     <div class="col-md-4">
                         <label class="form-label">Father's Mobile</label>
                         <input type="text" class="form-control" name="father_mobile" value="{{ old('father_mobile', $enquiry->father_mobile) }}" required>
                     </div>
-
                     <div class="col-md-4">
                         <label class="form-label">Mother's Mobile</label>
                         <input type="text" class="form-control" name="mother_mobile" value="{{ old('mother_mobile', $enquiry->mother_mobile) }}">
                     </div>
-
                     <div class="col-md-4">
                         <label class="form-label">Landline</label>
                         <input type="text" class="form-control" name="landline" value="{{ old('landline', $enquiry->landline) }}">
                     </div>
-
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label class="form-label">Email</label>
                         <input type="email" class="form-control" name="email" value="{{ old('email', $enquiry->email) }}">
                     </div>
 
-                    <div class="col-md-6">
-                        <label class="form-label">Admission For</label>
-                        <select name="admission_for" class="form-select" required>
-                            @foreach(['Playgroup', 'Nursery', 'Jr.KG', 'Sr.KG'] as $class)
-                                <option value="{{ $class }}" {{ $enquiry->admission_for == $class ? 'selected' : '' }}>{{ $class }}</option>
-                            @endforeach
+                    {{-- Branch Info --}}
+                    <div class="col-md-4">
+                        <label class="form-label">Branch Name</label>
+                        <select name="branch_name" class="form-select" required>
+                            <option value="">Select Branch</option>
+                            <option value="Mumbai Branch 1" {{ $enquiry->branch_name == 'Mumbai Branch 1' ? 'selected' : '' }}>Mumbai Branch 1</option>
+                            <option value="Mumbai Branch 2" {{ $enquiry->branch_name == 'Mumbai Branch 2' ? 'selected' : '' }}>Mumbai Branch 2</option>
                         </select>
                     </div>
 
-                    <div class="col-12">
-                        <hr>
-                        <h5>Sibling 1</h5>
+                    <div class="col-md-4">
+                        <label class="form-label">Admission For</label>
+                        <select name="admission_for" class="form-select" required>
+                            <option value="">Select Class</option>
+                            <option value="Playgroup" {{ $enquiry->admission_for == 'Playgroup' ? 'selected' : '' }}>Playgroup</option>
+                            <option value="Nursery" {{ $enquiry->admission_for == 'Nursery' ? 'selected' : '' }}>Nursery</option>
+                            <option value="Jr.KG" {{ $enquiry->admission_for == 'Jr.KG' ? 'selected' : '' }}>Jr.KG</option>
+                            <option value="Sr.KG" {{ $enquiry->admission_for == 'Sr.KG' ? 'selected' : '' }}>Sr.KG</option>
+                            <option value="Day Care" {{ $enquiry->admission_for == 'Day Care' ? 'selected' : '' }}>Day Care</option>
+                        </select>
                     </div>
 
+
+                    {{-- Siblings --}}
+                    <div class="col-12"><hr><h5>Sibling 1</h5></div>
+
                     <div class="col-md-4">
-                        <label class="form-label">Sibling 1 Name</label>
+                        <label class="form-label">Name</label>
                         <input type="text" class="form-control" name="sibling1_name" value="{{ old('sibling1_name', $enquiry->sibling1_name) }}">
                     </div>
-
                     <div class="col-md-4">
-                        <label class="form-label">Sibling 1 Sex</label>
+                        <label class="form-label">Gender</label>
                         <select name="sibling1_sex" class="form-select">
                             <option value="">Select</option>
                             @foreach(['Male', 'Female', 'Other'] as $sex)
@@ -92,24 +100,19 @@
                             @endforeach
                         </select>
                     </div>
-
                     <div class="col-md-4">
-                        <label class="form-label">Sibling 1 DOB</label>
+                        <label class="form-label">DOB</label>
                         <input type="date" class="form-control" name="sibling1_dob" value="{{ old('sibling1_dob', $enquiry->sibling1_dob) }}">
                     </div>
 
-                    <div class="col-12">
-                        <hr>
-                        <h5>Sibling 2</h5>
-                    </div>
+                    <div class="col-12"><hr><h5>Sibling 2</h5></div>
 
                     <div class="col-md-4">
-                        <label class="form-label">Sibling 2 Name</label>
+                        <label class="form-label">Name</label>
                         <input type="text" class="form-control" name="sibling2_name" value="{{ old('sibling2_name', $enquiry->sibling2_name) }}">
                     </div>
-
                     <div class="col-md-4">
-                        <label class="form-label">Sibling 2 Sex</label>
+                        <label class="form-label">Gender</label>
                         <select name="sibling2_sex" class="form-select">
                             <option value="">Select</option>
                             @foreach(['Male', 'Female', 'Other'] as $sex)
@@ -117,27 +120,24 @@
                             @endforeach
                         </select>
                     </div>
-
                     <div class="col-md-4">
-                        <label class="form-label">Sibling 2 DOB</label>
+                        <label class="form-label">DOB</label>
                         <input type="date" class="form-control" name="sibling2_dob" value="{{ old('sibling2_dob', $enquiry->sibling2_dob) }}">
                     </div>
 
+                    {{-- Address --}}
                     <div class="col-md-6">
                         <label class="form-label">Address</label>
                         <textarea class="form-control" name="address" rows="2">{{ old('address', $enquiry->address) }}</textarea>
                     </div>
-
                     <div class="col-md-2">
                         <label class="form-label">State</label>
                         <input type="text" class="form-control" name="state" value="{{ old('state', $enquiry->state) }}">
                     </div>
-
                     <div class="col-md-2">
                         <label class="form-label">City</label>
                         <input type="text" class="form-control" name="city" value="{{ old('city', $enquiry->city) }}">
                     </div>
-
                     <div class="col-md-2">
                         <label class="form-label">Pin</label>
                         <input type="text" class="form-control" name="pin" value="{{ old('pin', $enquiry->pin) }}">
@@ -145,8 +145,8 @@
                 </div>
 
                 <div class="mt-4 text-end">
-                    <button type="submit" class="btn btn-success">Update</button>
-                    <a href="{{ route('enquiries.index') }}" class="btn btn-secondary">Back</a>
+                    <button type="submit" class="btn btn-success">Update Enquiry</button>
+                    <a href="{{ route('enquiries.index') }}" class="btn btn-outline-secondary">Back</a>
                 </div>
             </form>
         </div>

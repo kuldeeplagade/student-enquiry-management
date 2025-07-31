@@ -1,3 +1,9 @@
+@php
+    header("Cache-Control: no-cache, no-store, must-revalidate");
+    header("Pragma: no-cache");
+    header("Expires: 0");
+@endphp
+
 @extends('layouts.public-form')
 
 @section('content')
@@ -68,6 +74,31 @@
             <div class="col-md-4 mb-3">
                 <label class="form-label">Blood Group</label>
                 <input type="text" name="blood_group" class="form-control rounded-pill shadow-sm" value="{{ old('blood_group') }}">
+            </div>
+        </div>
+
+                <div class="row mb-4">
+            {{-- Class Applying For --}}
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Class Applying For <span class="text-danger">*</span></label>
+                <select name="admission_for" class="form-select rounded-pill shadow-sm" required>
+                    <option value="">-- Select Class --</option>
+                    <option value="Playgroup" {{ old('admission_for') == 'Playgroup' ? 'selected' : '' }}>Playgroup</option>
+                    <option value="Nursery" {{ old('admission_for') == 'Nursery' ? 'selected' : '' }}>Nursery</option>
+                    <option value="Jr.KG" {{ old('admission_for') == 'Jr.KG' ? 'selected' : '' }}>Jr.KG</option>
+                    <option value="Sr.KG" {{ old('admission_for') == 'Sr.KG' ? 'selected' : '' }}>Sr.KG</option>
+                    <option value="Day Care" {{ old('admission_for') == 'Day Care' ? 'selected' : '' }}>Day Care</option>
+                </select>
+            </div>
+
+            {{-- Branch Location --}}
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Branch Location <span class="text-danger">*</span></label>
+                <select name="branch_name" class="form-select rounded-pill shadow-sm" required>
+                    <option value="">-- Select Branch --</option>
+                    <option value="Mumbai Branch 1" {{ old('branch_name') == 'Mumbai Branch 1' ? 'selected' : '' }}>Mumbai Branch 1</option>
+                    <option value="Mumbai Branch 2" {{ old('branch_name') == 'Mumbai Branch 2' ? 'selected' : '' }}>Mumbai Branch 2</option>
+                </select>
             </div>
         </div>
 

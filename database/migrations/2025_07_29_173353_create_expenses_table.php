@@ -17,6 +17,13 @@ return new class extends Migration
             $table->id();
             $table->string('title'); // Expense title (e.g., Rent, Salary)
             $table->decimal('amount', 10, 2);
+            $table->string('payment_mode');
+            // Foreign key category
+            $table->foreignId('category_id')
+                ->nullable()
+                ->constrained('expense_categories')
+                ->onDelete('set null');
+            $table->string('branch_name');
             $table->date('date')->default(DB::raw('CURRENT_DATE'));
             $table->text('notes')->nullable();
             $table->timestamps();
