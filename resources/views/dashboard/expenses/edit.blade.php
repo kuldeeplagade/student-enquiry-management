@@ -25,35 +25,38 @@
         <div class="mb-3">
             <label class="form-label">Payment Mode</label>
             <select name="payment_mode" class="form-select" required>
-                <option value="">Select Payment Mode</option>
+                <option value="">-- Select Payment Mode --</option>
                 @foreach(['Cash', 'UPI', 'Bank Transfer', 'Cheque', 'Other'] as $mode)
                     <option value="{{ $mode }}" {{ $expense->payment_mode === $mode ? 'selected' : '' }}>{{ $mode }}</option>
                 @endforeach
             </select>
         </div>
-
+        
         <div class="mb-3">
             <label class="form-label">Expense Category</label>
-            <select name="category" class="form-select" required>
-                <option value="">Select Category</option>
-                @foreach(['Stationery', 'Teacher Salary', 'Rent', 'Maintenance', 'Other'] as $cat)
-                    <option value="{{ $cat }}" {{ $expense->category === $cat ? 'selected' : '' }}>{{ $cat }}</option>
+            <select name="category" class="form-select">
+                <!-- <option value="">-- Select Category --</option> -->
+                @foreach ($categories as $cat)
+                    <option value="{{ $cat->name }}"
+                        {{ old('category', $expense->category) === $cat->name ? 'selected' : '' }}>
+                        {{ $cat->name }}
+                    </option>
                 @endforeach
             </select>
         </div>
 
         <div class="mb-3">
-            <label class="form-label">Branch Name <span class="text-danger">*</span></label>
-            <select name="branch_name" class="form-control" required>
+            <label class="form-label">Branch Name</label>
+            <select name="branch_name" class="form-select">
                 <option value="">-- Select Branch --</option>
-                <option value="Mumbai Branch 1">Mumbai Branch 1</option>
-                <option value="Mumbai Branch 2">Mumbai Branch 2</option>
+                <option value="Mumbai Branch 1" {{ old('branch_name', $expense->branch_name) == 'Mumbai Branch 1' ? 'selected' : '' }}>Mumbai Branch 1</option>
+                <option value="Mumbai Branch 2" {{ old('branch_name', $expense->branch_name) == 'Mumbai Branch 2' ? 'selected' : '' }}>Mumbai Branch 2</option>
             </select>
         </div>
 
         <div class="mb-3">
             <label class="form-label">Notes (optional)</label>
-            <textarea name="notes" class="form-control" rows="3">{{ $expense->notes }}</textarea>
+            <textarea name="notes" class="form-control" rows="3">{{ old('notes', $expense->notes) }}</textarea>
         </div>
 
         <button type="submit" class="btn btn-success">

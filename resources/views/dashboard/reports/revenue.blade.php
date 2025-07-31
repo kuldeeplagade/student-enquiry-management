@@ -9,17 +9,16 @@
     {{-- Filter Section --}}
     <form method="GET" class="row g-3 align-items-end mb-4">
         <div class="col-md-2">
-        <label class="form-label">Month</label>
-        <select name="month" class="form-select">
-            <option value="">All Months</option>
-            @foreach(range(1, 12) as $m)
-                @php $formatted = sprintf('%02d', $m); @endphp
-                <option value="{{ $formatted }}"
-                    {{ request('month', date('m')) == $formatted ? 'selected' : '' }}>
-                    {{ DateTime::createFromFormat('!m', $m)->format('F') }}
-                </option>
-            @endforeach
-        </select>
+            <label class="form-label">Month</label>
+            <select name="month" class="form-select">
+                <option value="">All Months</option>
+                @foreach(range(1, 12) as $m)
+                    <option value="{{ sprintf('%02d', $m) }}"
+                        {{ (request('month') ?? $month) == sprintf('%02d', $m) ? 'selected' : '' }}>
+                        {{ DateTime::createFromFormat('!m', $m)->format('F') }}
+                    </option>
+                @endforeach
+            </select>
         </div>
 
         <div class="col-md-2">
@@ -28,11 +27,12 @@
                 <option value="">All Years</option>
                 @foreach(range(date('Y') - 3, date('Y') + 1) as $y)
                     <option value="{{ $y }}"
-                        {{ request('year', date('Y')) == $y ? 'selected' : '' }}>
+                        {{ (request('year') ?? $year) == $y ? 'selected' : '' }}>
                         {{ $y }}
                     </option>
                 @endforeach
             </select>
+
         </div>
 
 
@@ -128,14 +128,14 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($enquiries as $index => $enquiry)
+                        @forelse ($paginatedEnquiries as $index => $enquiry)
                             @php
                                 $paid = $enquiry->payments->sum('amount_paid');
                                 $final = $enquiry->final_fee ?? $enquiry->default_fee ?? 0;
                                 $pending = max(0, $final - $paid);
                             @endphp
                             <tr>
-                                <td>{{ $index + 1 }}</td>
+                                <td>{{ ($paginatedEnquiries->currentPage() - 1) * $paginatedEnquiries->perPage() + $index + 1 }}</td>
                                 <td>{{ $enquiry->surname }} {{ $enquiry->first_name }}</td>
                                 <td>{{ $enquiry->admission_for }}</td>
                                 <td>{{ $enquiry->branch_name }}</td>
@@ -157,7 +157,7 @@
             </div>
             {{-- Pagination --}}
             <div class="p-3">
-                {{ $enquiries->withQueryString()->links('components.shared-pagination', ['paginator' => $enquiries]) }}
+                {{ $paginatedEnquiries->withQueryString()->links('components.shared-pagination', ['paginator' => $paginatedEnquiries]) }}
             </div>
 
         </div>

@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth; 
+use Illuminate\Validation\Rule;
 use App\Models\Expense;
+use App\Models\ExpenseCategory;
 use App\Models\Payment;
 use App\Models\Enquiry;
 
@@ -37,14 +39,23 @@ class ExpenseController extends Controller
 
     public function index()
     {
-        $expenses = Expense::orderBy('date', 'desc')->paginate(5);
-        $total = $expenses->sum('amount');
-        return view('dashboard.expenses.index', compact('expenses', 'total'));
+        $expenses = Expense::with('category')  // Optional: if not already eager loaded
+                        ->orderBy('created_at', 'desc') // <-- changed this line
+                        ->paginate(5);
+
+        $total = Expense::sum('amount'); // Get total of all, not just current page
+
+        $categories = ExpenseCategory::orderBy('name')->get();
+
+        return view('dashboard.expenses.index', compact('expenses', 'total', 'categories'));
     }
+
+
 
     public function create()
     {
-        return view('dashboard.expenses.create');
+        $categories = ExpenseCategory::orderBy('created_at','desc')->get();
+        return view('dashboard.expenses.create', compact('categories'));
     }
 
     public function store(Request $request)
@@ -54,13 +65,26 @@ class ExpenseController extends Controller
             'amount' => 'required|numeric|min:0',
             'date' => 'required|date',
             'payment_mode' => 'required|string|in:Cash,UPI,Bank Transfer,Cheque,Other',
-            'category' => 'required|string|in:Stationery,Teacher Salary,Rent,Maintenance,Other',
+            'category' => ['required', 'string', Rule::exists('expense_categories', 'name')],
             'branch_name' =>'required|string|in:Mumbai Branch 1,Mumbai Branch 2',
             'notes' => 'nullable|string',
         ]);
 
         try {
-            Expense::create($request->all());
+            // Map category name to ID
+            $category = ExpenseCategory::where('name', $request->category)->first();
+
+            // Save expense
+            Expense::create([
+                'title' => $request->title,
+                'amount' => $request->amount,
+                'date' => $request->date,
+                'payment_mode' => $request->payment_mode,
+                'category_id' => $category?->id, // set category_id correctly
+                'branch_name' => $request->branch_name,
+                'notes' => $request->notes,
+            ]);
+
             return redirect()->route('expenses.index')->with('success', 'Expense added successfully.');
         } catch (\Exception $e) {
             \Log::error('Expense store error: '.$e->getMessage());
@@ -72,7 +96,8 @@ class ExpenseController extends Controller
     public function edit($id)
     {
         $expense = Expense::findOrFail($id);
-        return view('dashboard.expenses.edit', compact('expense'));
+        $categories = ExpenseCategory::orderBy('created_at', 'desc')->get();
+        return view('dashboard.expenses.edit', compact('expense', 'categories'));
     }
 
     public function update(Request $request, $id)
@@ -81,14 +106,30 @@ class ExpenseController extends Controller
             'title' => 'required|string',
             'amount' => 'required|numeric|min:0',
             'payment_mode' => 'required|string|in:Cash,UPI,Bank Transfer,Cheque,Other',
-            'category' => 'required|string|in:Stationery,Teacher Salary,Rent,Maintenance,Other',
+            'category' => 'nullable|string|max:255',
             'branch_name' =>'required|string|in:Mumbai Branch 1,Mumbai Branch 2',
             'date' => 'required|date',
             'notes' => 'nullable|string',
         ]);
 
         $expense = Expense::findOrFail($id);
-        $expense->update($request->all());
+
+        // If category is provided, map it to category_id
+        $categoryId = null;
+        if ($request->filled('category')) {
+            $category = ExpenseCategory::where('name', $request->category)->first();
+            $categoryId = $category?->id;
+        }
+
+        $expense->update([
+            'title' => $request->title,
+            'amount' => $request->amount,
+            'payment_mode' => $request->payment_mode,
+            'category_id' => $categoryId,
+            'branch_name' => $request->branch_name,
+            'date' => $request->date,
+            'notes' => $request->notes,
+        ]);
 
         return redirect()->route('expenses.index')->with('success', 'Expense updated successfully.');
     }

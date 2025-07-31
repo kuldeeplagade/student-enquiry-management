@@ -9,6 +9,8 @@ use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\AdminActivityController;
 use App\Http\Controllers\AdminManagementController;
 use App\Http\Controllers\ReportsController;
+use App\Http\Controllers\ExpenseCategoryController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -79,6 +81,10 @@ Route::prefix('dashboard/reports')->middleware(['auth'])->group(function () {
 
 Route::post('/payments/{id}/discount', [PaymentController::class, 'setDiscount'])->name('discount.update');
 
+//Expenses category 
+Route::post('/expense-categories', [ExpenseCategoryController::class, 'store'])->name('expense-categories.store');
+Route::put('/expense-categories/{id}', [ExpenseCategoryController::class, 'update'])->name('expense-categories.update');
+Route::delete('/expense-categories/{id}', [ExpenseCategoryController::class, 'destroy'])->name('expense-categories.destroy');
 
 //SuperAdmin Check the Activity in All Admins
 Route::get('/admin-activities', [AdminActivityController::class, 'index'])

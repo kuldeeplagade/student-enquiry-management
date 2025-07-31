@@ -14,7 +14,7 @@
                 <option value="">All Months</option>
                 @foreach(range(1, 12) as $m)
                     <option value="{{ sprintf('%02d', $m) }}"
-                        {{ (request('month') ?? $month) == sprintf('%02d', $m) ? 'selected' : '' }}>
+                        {{ (old('month', $month) == sprintf('%02d', $m)) ? 'selected' : '' }}>
                         {{ DateTime::createFromFormat('!m', $m)->format('F') }}
                     </option>
                 @endforeach
@@ -24,13 +24,13 @@
         <div class="col-md-2">
             <label class="form-label">Year</label>
             <select name="year" class="form-select">
-                <option value="">All Years</option>
-                @foreach(range(date('Y') - 3, date('Y') + 1) as $y)
-                    <option value="{{ $y }}"
-                        {{ (request('year') ?? $year) == $y ? 'selected' : '' }}>
-                        {{ $y }}
-                    </option>
-                @endforeach
+            <option value="" {{ $year == "" ? 'selected' : '' }}>All Years</option>
+            @foreach(range(date('Y') - 3, date('Y') + 1) as $y)
+                <option value="{{ $y }}" {{ old('year', $year) == $y ? 'selected' : '' }}>
+                    {{ $y }}
+                </option>
+            @endforeach
+
             </select>
 
         </div>
@@ -48,13 +48,15 @@
             <label class="form-label">Category</label>
             <select name="category" class="form-select">
                 <option value="">All Categories</option>
-                @foreach(['Stationery', 'Teacher Salary', 'Rent', 'Maintenance', 'Other'] as $cat)
-                    <option value="{{ $cat }}" {{ request('category') == $cat ? 'selected' : '' }}>
-                        {{ $cat }}
+                @foreach ($categories as $cat)
+                    <option value="{{ $cat->id }}" {{ request('category') == $cat->id ? 'selected' : '' }}>
+                        {{ $cat->name }}
                     </option>
                 @endforeach
             </select>
         </div>
+
+
 
         <div class="col-md-2">
             <label class="form-label">Payment Mode</label>
@@ -109,10 +111,10 @@
                     <tbody>
                         @forelse ($expenses as $index => $expense)
                             <tr>
-                                <td>{{ $index + 1 }}</td>
+                                <td>{{ ($expenses->currentPage() - 1) * $expenses->perPage() + $index + 1 }}</td>
                                 <td>{{ $expense->title }}</td>
                                 <td>₹{{ number_format($expense->amount, 2) }}</td>
-                                <td>{{ $expense->category }}</td>
+                                <td>{{ $expense->category->name ?? 'N/A' }}</td>
                                 <td>{{ $expense->payment_mode }}</td>
                                 <td>{{ $expense->branch_name }}</td>
                                 <td>{{ \Carbon\Carbon::parse($expense->date)->format('d M Y') }}</td>

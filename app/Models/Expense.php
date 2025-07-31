@@ -13,9 +13,16 @@ class Expense extends Model
     'title', 
     'amount',
     'payment_mode',
-    'category',
+    'category_id',
     'branch_name',
     'date',
     'notes'
-];
+];  
+
+    public function category()
+    {
+        return $this->belongsTo(ExpenseCategory::class, 'category_id');
+    }
+
 }
+

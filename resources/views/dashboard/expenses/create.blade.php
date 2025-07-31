@@ -39,14 +39,12 @@
         </div>
 
         <div class="mb-3">
-            <label class="form-label">Expense Category <span class="text-danger">*</span></label>
+            <label class="form-label">Category <span class="text-danger">*</span></label>
             <select name="category" class="form-select" required>
                 <option value="">--Select Category--</option>
-                <option value="Stationery">Stationery</option>
-                <option value="Teacher Salary">Teacher Salary</option>
-                <option value="Rent">Rent</option>
-                <option value="Maintenance">Maintenance</option>
-                <option value="Other">Other</option>
+                @foreach($categories as $category)
+                    <option value="{{ $category->name }}">{{ $category->name }}</option>
+                @endforeach
             </select>
         </div>
 
@@ -54,10 +52,15 @@
             <label class="form-label">Branch Name <span class="text-danger">*</span></label>
             <select name="branch_name" class="form-control" required>
                 <option value="">-- Select Branch --</option>
-                <option value="Mumbai Branch 1">Mumbai Branch 1</option>
-                <option value="Mumbai Branch 2">Mumbai Branch 2</option>
+                <option value="Mumbai Branch 1" {{ old('branch_name') == 'Mumbai Branch 1' ? 'selected' : '' }}>
+                    Mumbai Branch 1
+                </option>
+                <option value="Mumbai Branch 2" {{ old('branch_name') == 'Mumbai Branch 2' ? 'selected' : '' }}>
+                    Mumbai Branch 2
+                </option>
             </select>
         </div>
+
 
         <div class="mb-3">
             <label class="form-label">Notes</label>
