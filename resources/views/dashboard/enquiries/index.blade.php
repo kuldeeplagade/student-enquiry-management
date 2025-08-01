@@ -52,20 +52,34 @@
                             <td>{{ $enquiry->dob }}</td>
                             <td>{{ $enquiry->father_mobile }}</td>
                             <td>{{ $enquiry->admission_for }}</td>
-                            <td>
-                                <a href="{{ route('enquiries.edit', $enquiry->id) }}" 
-                                   class="btn btn-sm custom-btn edit-btn me-1 mb-1">
-                                    <i class="bi bi-pencil-square me-1"></i> Edit
-                                </a>
-                                <a href="{{ route('enquiries.show', $enquiry->id) }}" 
-                                   class="btn btn-sm custom-btn view-btn me-1 mb-1">
-                                    <i class="bi bi-eye me-1"></i> View
-                                </a>
-                                <a href="{{ route('payments.index', $enquiry->id) }}" 
-                                   class="btn btn-sm custom-btn payment-btn mb-1">
-                                    <i class="bi bi-currency-rupee me-1"></i> Payment
-                                </a>
+                            <td class="text-center align-middle">
+                                <div class="d-flex flex-wrap justify-content-center gap-1">
+                                    {{-- Edit --}}
+                                    <a href="{{ route('enquiries.edit', $enquiry->id) }}" class="btn btn-sm custom-btn edit-btn">
+                                        <i class="bi bi-pencil-square me-1"></i> Edit
+                                    </a>
+
+                                    {{-- View --}}
+                                    <a href="{{ route('enquiries.show', $enquiry->id) }}" class="btn btn-sm custom-btn view-btn">
+                                        <i class="bi bi-eye me-1"></i> View
+                                    </a>
+
+                                    {{-- Payment --}}
+                                    <a href="{{ route('payments.index', $enquiry->id) }}" class="btn btn-sm custom-btn payment-btn">
+                                        <i class="bi bi-currency-rupee me-1"></i> Payment
+                                    </a>
+
+                                    {{-- Delete --}}
+                                    @if($enquiry->discount_amount == 0 && $enquiry->payments->count() == 0)
+                                        <button class="btn btn-sm custom-btn delete-btn"
+                                                onclick="confirmDelete({{ $enquiry->id }})"
+                                                title="Delete this enquiry">
+                                            <i class="bi bi-trash me-1"></i>
+                                        </button>
+                                    @endif
+                                </div>
                             </td>
+
                         </tr>
                     @empty
                         <tr>
@@ -117,13 +131,41 @@
     .payment-btn:hover {
         background-color: #449d44;
     }
+
+    .delete-btn {
+        background-color: #d9534f;
+    }
+
+    .delete-btn:hover {
+        background-color: #c9302c;
+    }
+
+        .delete-btn {
+        background-color: #d9534f;
+    }
+
+    .delete-btn:hover {
+        background-color: #c9302c;
+    }
+
+    td {
+        vertical-align: middle !important;
+    }
+
+
     
     .scroll-y {
         max-height: 420px;
         overflow-y: auto;
     }
-
-
-
 </style>
+
+<script>
+    function confirmDelete(id) {
+        if (confirm("Are you sure you want to delete this unconfirmed enquiry?")) {
+            window.location.href = `/enquiries/${id}/delete`;
+        }
+    }
+</script>
+
 @endsection

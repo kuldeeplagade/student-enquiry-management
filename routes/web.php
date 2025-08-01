@@ -86,6 +86,15 @@ Route::post('/expense-categories', [ExpenseCategoryController::class, 'store'])-
 Route::put('/expense-categories/{id}', [ExpenseCategoryController::class, 'update'])->name('expense-categories.update');
 Route::delete('/expense-categories/{id}', [ExpenseCategoryController::class, 'destroy'])->name('expense-categories.destroy');
 
+// Confirmed Admissions Route
+Route::get('/confirmed-admissions', [EnquiryController::class, 'confirmedAdmissions'])->name('enquiries.confirmed');
+
+// Delete Enquiry (only unconfirmed allowed)
+Route::get('/enquiries/{id}/delete', [EnquiryController::class, 'destroy'])->name('enquiries.destroy');
+
+
+
+
 //SuperAdmin Check the Activity in All Admins
 Route::get('/admin-activities', [AdminActivityController::class, 'index'])
     ->middleware('auth')

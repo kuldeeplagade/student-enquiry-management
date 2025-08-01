@@ -25,6 +25,7 @@ class CreateEnquiriesTable extends Migration
             $table->decimal('default_fee', 10, 2);
             $table->decimal('discount_amount', 10, 2)->nullable();
             $table->decimal('final_fee', 10, 2)->nullable();
+            $table->enum('status', ['pending', 'confirmed', 'cancelled'])->default('pending');
             $table->string('sibling1_name')->nullable();
             $table->enum('sibling1_sex', ['Male', 'Female', 'Other'])->nullable();
             $table->date('sibling1_dob')->nullable();

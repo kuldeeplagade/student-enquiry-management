@@ -79,6 +79,11 @@
         <i class="bi bi-card-list me-2"></i> View Enquiries
     </a>
 
+    <!-- Confirmed Addmission -->
+    <a class="nav-link" href="{{ route('enquiries.confirmed') }}">
+        <i class="bi bi-check-circle me-1"></i> Confirmed Admissions
+    </a>
+
     <!-- View All Expenses -->
     <a href="{{ route('expenses.index') }}">
         <i class="bi bi-cash-coin me-2"></i> View Expenses
