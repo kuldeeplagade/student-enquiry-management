@@ -1,9 +1,9 @@
 @extends('dashboard')
 
 @section('content')
-<h2 class="mb-4 d-flex align-items-center">
-    <i class="bi bi-person-check-fill text-success fs-4 me-2"></i> Confirmed Admissions
-</h2>
+<h3 class="mb-4 d-flex align-items-center">
+    <i class="bi bi-person-check-fill text-dark fs-4 me-2"></i> Confirmed Admissions
+</h3>
 
 <!-- Filter by Class -->
 <form method="GET" action="{{ route('enquiries.confirmed') }}" class="mb-4">

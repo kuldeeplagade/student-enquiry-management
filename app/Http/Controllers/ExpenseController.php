@@ -16,15 +16,36 @@ class ExpenseController extends Controller
     // Total Expenses, Revenue, Net Profit and Expected Revenue (with optional month filter)
     public function revenueSummary(Request $request)
     {
-        $month = $request->input('month', Carbon::now()->format('m'));
-        $year = $request->input('year', Carbon::now()->format('Y'));
+        $month = $request->input('month');
+        $year = $request->input('year');
 
-        $startDate = Carbon::createFromDate($year, $month, 1)->startOfMonth();
-        $endDate = Carbon::createFromDate($year, $month, 1)->endOfMonth();
+        // Determine date range
+        if ($year && !$month) {
+            $startDate = Carbon::createFromDate($year, 1, 1)->startOfYear();
+            $endDate = Carbon::createFromDate($year, 12, 31)->endOfYear();
+        } elseif ($year && $month) {
+            $startDate = Carbon::createFromDate($year, $month, 1)->startOfMonth();
+            $endDate = Carbon::createFromDate($year, $month, 1)->endOfMonth();
+        } else {
+            $startDate = Carbon::now()->startOfMonth();
+            $endDate = Carbon::now()->endOfMonth();
+            $year = $startDate->year;
+            $month = $startDate->month;
+        }
 
+        // Revenue: Sum of payments made during selected period
         $totalRevenue = Payment::whereBetween('created_at', [$startDate, $endDate])->sum('amount_paid');
+
+        // Expenses: Sum of expenses based on their "date"
         $totalExpenses = Expense::whereBetween('date', [$startDate, $endDate])->sum('amount');
-        $expectedRevenue = Enquiry::sum('final_fee');
+
+        // Expected Revenue = Sum of final_fee or fallback to default_fee from all enquiries in that period
+        $enquiriesInPeriod = Enquiry::whereBetween('created_at', [$startDate, $endDate])->get();
+        $expectedRevenue = $enquiriesInPeriod->sum(function ($e) {
+            return $e->final_fee ?? $e->default_fee ?? 0;
+        });
+
+        // Net Profit = Revenue - Expense
         $netProfit = $totalRevenue - $totalExpenses;
 
         return view('dashboard.expenses.revenue-summary', compact(
@@ -36,6 +57,7 @@ class ExpenseController extends Controller
             'year'
         ));
     }
+
 
     public function index()
     {

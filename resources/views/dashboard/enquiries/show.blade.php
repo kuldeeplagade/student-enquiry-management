@@ -61,58 +61,82 @@
                     <input type="text" class="form-control" value="{{ $enquiry->branch_name }}" readonly>
                 </div>
 
-                {{-- Sibling 1 --}}
-                <div class="col-12">
+                {{-- Financial Info --}}
+                <div class="col-12 mt-4">
+                    <hr>
+                    <h5>Fee Information</h5>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Default Fee</label>
+                    <input type="text" class="form-control" value="₹{{ number_format($enquiry->default_fee, 2) }}" readonly>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Discount Amount</label>
+                    <input type="text" class="form-control" value="₹{{ number_format($enquiry->discount_amount, 2) ?? '0.00' }}" readonly>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Payable Fee</label>
+                    <input type="text" class="form-control" value="₹{{ number_format($enquiry->final_fee, 2) ?? '0.00' }}" readonly>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Total Paid</label>
+                    <input type="text" class="form-control" value="₹{{ number_format($enquiry->payments->sum('amount_paid'), 2) }}" readonly>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Pending Fee</label>
+                    <input type="text" class="form-control bg-light text-danger" 
+                        value="₹{{ number_format(($enquiry->final_fee ?? 0) - $enquiry->payments->sum('amount_paid'), 2) }}" readonly>
+                </div>
+
+                {{-- Sibling Info --}}
+                <div class="col-12 mt-4">
                     <hr>
                     <h5>Sibling 1</h5>
                 </div>
-
                 <div class="col-md-4">
-                    <label class="form-label">Sibling 1 Name</label>
+                    <label class="form-label">Name</label>
                     <input type="text" class="form-control" value="{{ $enquiry->sibling1_name }}" readonly>
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label">Sibling 1 Sex</label>
+                    <label class="form-label">Sex</label>
                     <input type="text" class="form-control" value="{{ $enquiry->sibling1_sex }}" readonly>
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label">Sibling 1 DOB</label>
+                    <label class="form-label">DOB</label>
                     <input type="text" class="form-control" value="{{ $enquiry->sibling1_dob }}" readonly>
                 </div>
 
-                {{-- Sibling 2 --}}
-                <div class="col-12">
-                    <hr>
+                <div class="col-12 mt-4">
                     <h5>Sibling 2</h5>
                 </div>
-
                 <div class="col-md-4">
-                    <label class="form-label">Sibling 2 Name</label>
+                    <label class="form-label">Name</label>
                     <input type="text" class="form-control" value="{{ $enquiry->sibling2_name }}" readonly>
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label">Sibling 2 Sex</label>
+                    <label class="form-label">Sex</label>
                     <input type="text" class="form-control" value="{{ $enquiry->sibling2_sex }}" readonly>
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label">Sibling 2 DOB</label>
+                    <label class="form-label">DOB</label>
                     <input type="text" class="form-control" value="{{ $enquiry->sibling2_dob }}" readonly>
                 </div>
 
                 {{-- Address --}}
-                <div class="col-md-6">
+                <div class="col-md-6 mt-4">
                     <label class="form-label">Address</label>
                     <textarea class="form-control" rows="2" readonly>{{ $enquiry->address }}</textarea>
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-2 mt-4">
                     <label class="form-label">State</label>
                     <input type="text" class="form-control" value="{{ $enquiry->state }}" readonly>
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-2 mt-4">
                     <label class="form-label">City</label>
                     <input type="text" class="form-control" value="{{ $enquiry->city }}" readonly>
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-2 mt-4">
                     <label class="form-label">Pin</label>
                     <input type="text" class="form-control" value="{{ $enquiry->pin }}" readonly>
                 </div>

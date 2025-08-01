@@ -2,9 +2,9 @@
 
 @section('content')
 <div class="container">
-    <h2 class="mb-3 d-flex align-items-center">
+    <h3 class="mb-3 d-flex align-items-center">
         <i class="bi bi-cash-coin text-dark fs-4 me-2"></i> Expense Summary
-    </h2>
+    </h3>
 
 
     {{-- Manage Categories Button --}}

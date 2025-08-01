@@ -1,9 +1,9 @@
 @extends('dashboard')
 
 @section('content')
-<h2 class="mb-4 d-flex align-items-center">
+<h3 class="mb-4 d-flex align-items-center">
     <i class="bi bi-journal-text text-dark fs-4 me-2"></i> Enquiry List
-</h2>
+</h3>
 
 <form method="GET" action="{{ route('enquiries.index') }}" class="mb-4">
     <div class="row g-3 align-items-center">
