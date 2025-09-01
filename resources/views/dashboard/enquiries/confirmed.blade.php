@@ -6,27 +6,52 @@
 </h3>
 
 <!-- Filter by Class -->
-<form method="GET" action="{{ route('enquiries.confirmed') }}" class="mb-4">
-    <div class="row g-3 align-items-center">
-        <div class="col-md-4">
-            <label for="class" class="form-label fw-semibold">Filter by Class</label>
-            <select name="class" id="class" class="form-select" onchange="this.form.submit()">
-                <option value="All" {{ $selectedClass == 'All' ? 'selected' : '' }}>All</option>
-                @foreach($classes as $class)
-                    <option value="{{ $class }}" {{ $selectedClass == $class ? 'selected' : '' }}>
-                        {{ $class }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
+<form method="GET" action="{{ route('enquiries.confirmed') }}" class="row g-2 align-items-end mb-3">
+    <div class="col-md-2">
+        <label class="form-label">Group</label>
+        <select name="class" class="form-select">
+            <option value="All">All Groups</option>
+            @foreach($classes as $class)
+                <option value="{{ $class }}" {{ request('class') == $class ? 'selected' : '' }}>
+                    {{ $class }}
+                </option>
+            @endforeach
+        </select>
+    </div>
+
+    <div class="col-md-2">
+        <label class="form-label">Branch</label>
+        <select name="branch_name" class="form-select">
+            <option value="All">All Branches</option>
+            @foreach($branches as $branch)
+                <option value="{{ $branch }}" {{ request('branch_name') == $branch ? 'selected' : '' }}>
+                    {{ $branch }}
+                </option>
+            @endforeach
+        </select>
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Search</label>
+        <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="Name / Mobile">
+    </div>
+
+    <div class="col-md-2">
+        <label class="form-label">&nbsp;</label>
+        <button type="submit" class="btn btn-primary w-100">
+            <i class="bi bi-funnel-fill me-1"></i> Filter
+        </button>
+    </div>
+
+    <div class="col-md-2">
+        <label class="form-label">&nbsp;</label>
+        <a href="{{ route('enquiries.confirmed') }}" class="btn btn-outline-secondary w-100">
+            <i class="bi bi-x-circle me-1"></i> Reset
+        </a>
     </div>
 </form>
 
-<!-- Search -->
-<form method="GET" class="d-flex mb-3">
-    <input type="text" name="search" class="form-control me-2" placeholder="Search..." value="{{ request('search') }}">
-    <button type="submit" class="btn btn-outline-primary">Search</button>
-</form>
+
 
 <!-- Table -->
 <div class="card shadow-sm border-0">

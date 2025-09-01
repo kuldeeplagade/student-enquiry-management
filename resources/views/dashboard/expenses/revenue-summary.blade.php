@@ -9,6 +9,7 @@
         <div class="col-md-3">
             <label for="month" class="form-label">Select Month</label>
             <select class="form-select" name="month" id="month">
+                <option value="All" {{ request('month') == 'All' ? 'selected' : '' }}>All</option>
                 @foreach(range(1,12) as $m)
                     <option value="{{ $m }}" {{ request('month', date('n')) == $m ? 'selected' : '' }}>
                         {{ date('F', mktime(0, 0, 0, $m, 1)) }}
@@ -20,6 +21,7 @@
         <div class="col-md-3">
             <label for="year" class="form-label">Select Year</label>
             <select class="form-select" name="year" id="year">
+                <option value="All" {{ request('year') == 'All' ? 'selected' : '' }}>All</option>
                 @for($y = now()->year; $y >= 2023; $y--)
                     <option value="{{ $y }}" {{ request('year', date('Y')) == $y ? 'selected' : '' }}>{{ $y }}</option>
                 @endfor

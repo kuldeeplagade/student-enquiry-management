@@ -80,11 +80,17 @@ class EnquiryController extends Controller
     public function index(Request $request)
     {
         $selectedClass = $request->get('class', 'All');
+        $selectedBranch = $request->get('branch_name', 'All');
         $search = $request->get('search');
+
         $classes = ['Playgroup', 'Nursery', 'Jr.KG', 'Sr.KG', 'Day Care'];
+        $branches = ['Mumbai Branch 1', 'Mumbai Branch 2'];
 
         $enquiries = Enquiry::when($selectedClass !== 'All', function ($query) use ($selectedClass) {
                 return $query->where('admission_for', $selectedClass);
+            })
+            ->when($selectedBranch !== 'All', function ($query) use ($selectedBranch) {
+                return $query->where('branch_name', $selectedBranch);
             })
             ->when($search, function ($query) use ($search) {
                 return $query->where(function ($q) use ($search) {
@@ -96,10 +102,18 @@ class EnquiryController extends Controller
             })
             ->orderBy('id', 'desc')
             ->paginate(5)
-            ->withQueryString(); // Keeps search params in pagination links
+            ->withQueryString();
 
-        return view('dashboard.enquiries.index', compact('enquiries', 'classes', 'selectedClass', 'search'));
+        return view('dashboard.enquiries.index', compact(
+            'enquiries',
+            'classes',
+            'branches',
+            'selectedClass',
+            'selectedBranch',
+            'search'
+        ));
     }
+
 
 
 
@@ -151,13 +165,14 @@ class EnquiryController extends Controller
         }
     }
 
-    //Confirmed Admission
     public function confirmedAdmissions(Request $request)
     {
         $selectedClass = $request->get('class', 'All');
+        $selectedBranch = $request->get('branch_name', 'All');
         $search = $request->get('search');
 
         $classes = ['Playgroup', 'Nursery', 'Jr.KG', 'Sr.KG', 'Day Care'];
+        $branches = ['Mumbai Branch 1', 'Mumbai Branch 2'];
 
         $enquiries = Enquiry::where(function ($query) {
                 $query->where('discount_amount', '>', 0)
@@ -165,6 +180,9 @@ class EnquiryController extends Controller
             })
             ->when($selectedClass !== 'All', function ($query) use ($selectedClass) {
                 return $query->where('admission_for', $selectedClass);
+            })
+            ->when($selectedBranch !== 'All', function ($query) use ($selectedBranch) {
+                return $query->where('branch_name', $selectedBranch);
             })
             ->when($search, function ($query) use ($search) {
                 return $query->where(function ($q) use ($search) {
@@ -174,12 +192,19 @@ class EnquiryController extends Controller
                     ->orWhere('middle_name', 'like', "%{$search}%");
                 });
             })
-            ->with('payments') // eager load
+            ->with('payments')
             ->orderBy('id', 'desc')
             ->paginate(5)
             ->withQueryString();
 
-        return view('dashboard.enquiries.confirmed', compact('enquiries', 'classes', 'selectedClass', 'search'));
+        return view('dashboard.enquiries.confirmed', compact(
+            'enquiries',
+            'classes',
+            'branches',
+            'selectedClass',
+            'selectedBranch',
+            'search'
+        ));
     }
 
     //Delete enquiry 

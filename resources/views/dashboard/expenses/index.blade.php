@@ -17,11 +17,18 @@
         </button>
     </div>
 
+    @php  
+        $monthName = \Carbon\Carbon::createFromDate(null, $currentMonth)->format('F');
+    @endphp
+
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-body">
-            <h5 class="mb-0 text-dark"><strong>Total Expenses (₹):</strong> {{ number_format($total, 2) }}</h5>
+            <h5 class="mb-0 text-dark">
+                <strong>Total Expenses for {{ $monthName }} (₹):</strong> {{ number_format($total, 2) }}
+            </h5>
         </div>
     </div>
+
 
     <div class="card shadow-sm border-0">
         <div class="card-body p-0">

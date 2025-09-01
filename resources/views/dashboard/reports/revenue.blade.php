@@ -6,8 +6,9 @@
         <i class="bi bi-bar-chart-line-fill me-2"></i> Revenue Report
     </h4>
 
-    {{-- Filter Section --}}
+    {{-- Filters --}}
     <form method="GET" class="row g-3 align-items-end mb-4">
+        {{-- Month --}}
         <div class="col-md-2">
             <label class="form-label">Month</label>
             <select name="month" class="form-select">
@@ -21,22 +22,21 @@
             </select>
         </div>
 
+        {{-- Year --}}
         <div class="col-md-2">
             <label class="form-label">Year</label>
             <select name="year" class="form-select">
                 <option value="">All Years</option>
                 @foreach(range(date('Y') - 3, date('Y') + 1) as $y)
-                    <option value="{{ $y }}"
-                        {{ (request('year') ?? $year) == $y ? 'selected' : '' }}>
+                    <option value="{{ $y }}" {{ (request('year') ?? $year) == $y ? 'selected' : '' }}>
                         {{ $y }}
                     </option>
                 @endforeach
             </select>
-
         </div>
 
-
-        <div class="col-md-2">
+        {{-- Branch --}}
+        <div class="col-md-3">
             <label class="form-label">Branch</label>
             <select name="branch_name" class="form-select">
                 <option value="">All Branches</option>
@@ -45,7 +45,8 @@
             </select>
         </div>
 
-        <div class="col-md-2">
+        {{-- Class --}}
+        <div class="col-md-3">
             <label class="form-label">Class</label>
             <select name="admission_for" class="form-select">
                 <option value="">All Groups</option>
@@ -53,11 +54,6 @@
                     <option value="{{ $group }}" {{ request('admission_for') == $group ? 'selected' : '' }}>{{ $group }}</option>
                 @endforeach
             </select>
-        </div>
-
-        <div class="col-md-2">
-            <label class="form-label">Student Name</label>
-            <input type="text" name="student_name" class="form-control" placeholder="Enter name" value="{{ request('student_name') }}">
         </div>
 
         <div class="col-md-2 d-flex gap-2">

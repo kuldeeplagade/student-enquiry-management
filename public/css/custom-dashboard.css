@@ -1,0 +1,33 @@
+/* Purple-themed table header */
+.table thead th {
+    background-color: #7e57c2; /* Purple */
+    color: white;
+}
+
+/* Light purple row background */
+.table tbody tr:nth-child(even) {
+    background-color: #f3e5f5;
+}
+
+/* Blue pagination matching purple theme */
+.pagination .page-link {
+    color: #5e35b1;
+    border-color: #d1c4e9;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #7e57c2;
+    border-color: #7e57c2;
+    color: white;
+}
+
+/* Filter Button */
+.filter-btn {
+    background-color: #5e35b1;
+    color: white;
+    border: none;
+}
+
+.filter-btn:hover {
+    background-color: #4527a0;
+}

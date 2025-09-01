@@ -7,65 +7,10 @@
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            min-height: 100vh;
-            display: flex;
-            margin: 0;
-        }
+    <link href="{{ asset('css/dashboard.css') }}" rel="stylesheet">
 
-        .sidebar {
-            width: 250px;
-            background: rgb(68, 142, 222);
-            color: #fff;
-            min-height: 100vh;
-            padding-top: 1rem;
-        }
-
-        .sidebar h4 {
-            padding: 1rem 1.25rem;
-            font-weight: bold;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .sidebar a {
-            color: #fff;
-            display: block;
-            padding: 12px 20px;
-            text-decoration: none;
-            transition: background 0.2s, padding-left 0.2s;
-        }
-
-        .sidebar a:hover {
-            background: rgba(255, 255, 255, 0.1);
-            padding-left: 25px;
-        }
-
-        .content {
-            flex: 1;
-            padding: 20px;
-            background: #f4f6f9;
-        }
-
-        .navbar {
-            background-color: #fff;
-            border-bottom: 1px solid #dee2e6;
-        }
-
-        /*  Dropdown Hover Fix */
-        .dropdown-menu .dropdown-item:hover {
-            background-color: #e6eaf0 !important;  /* Light blue/gray */
-            color: #000 !important;
-            font-weight: 500;
-        }
-
-        /*  Optional: Hover highlight effect for Logout in red */
-        .dropdown-menu .dropdown-item.text-danger:hover {
-            background-color: #ffdddd !important;
-            color: #c82333 !important;
-        }
-    </style>
-
+    <!-- {{-- Allow child views to inject page-specific styles --}} -->
+    @yield('head')
 </head>
 <body>
 
@@ -75,47 +20,52 @@
     <h4 class="p-3">Dashboard</h4>
 
     <!-- View All Enquiries -->
-    <a href="{{ route('enquiries.index') }}">
+    <a href="{{ route('enquiries.index') }}"
+    class="{{ request()->routeIs('enquiries.index') ? 'active' : '' }}">
         <i class="bi bi-card-list me-2"></i> View Enquiries
     </a>
 
-    <!-- Confirmed Addmission -->
-    <a class="nav-link" href="{{ route('enquiries.confirmed') }}">
+    <!-- Confirmed Admissions -->
+    <a href="{{ route('enquiries.confirmed') }}"
+    class="{{ request()->routeIs('enquiries.confirmed') ? 'active' : '' }}">
         <i class="bi bi-check-circle me-1"></i> Confirmed Admissions
     </a>
 
-    <!-- View All Expenses -->
-    <a href="{{ route('expenses.index') }}">
-        <i class="bi bi-cash-coin me-2"></i> View Expenses
+    <!-- Add Expenses -->
+    <a href="{{ route('expenses.index') }}"
+    class="{{ request()->routeIs('expenses.index') ? 'active' : '' }}">
+        <i class="bi bi-cash-coin me-2"></i> Add Expenses
     </a>
 
-    <!-- View All Revenue Summary -->
-    @auth
-        @if(auth()->user()->role === 'superadmin')
-            <a href="{{ route('revenue.summary') }}">
-                <i class="bi bi-graph-up-arrow me-2"></i> Revenue Summary
-            </a>
-        @endif
-    @endauth
-
-    <!-- View Admin Activities -->
+    <!-- Expense Report -->
     @if(auth()->user()->role === 'superadmin')
-        <a href="{{ route('admin.activities') }}">
-            <i class="bi bi-tools me-2"></i> Admin Activities
+        <a href="{{ route('reports.expenses') }}"
+        class="{{ request()->routeIs('reports.expenses') ? 'active' : '' }}">
+            <i class="bi bi-receipt me-2"></i> Expense Report
         </a>
     @endif
 
-    <!-- View Detailed Report -->
+    <!-- Revenue Summary -->
     @if(auth()->user()->role === 'superadmin')
-        <a href="{{ route('reports.revenue') }}">
+        <a href="{{ route('revenue.summary') }}"
+        class="{{ request()->routeIs('revenue.summary') ? 'active' : '' }}">
+            <i class="bi bi-graph-up-arrow me-2"></i> Revenue Summary
+        </a>
+    @endif
+
+    <!-- Revenue Report -->
+    @if(auth()->user()->role === 'superadmin')
+        <a href="{{ route('reports.revenue') }}"
+        class="{{ request()->routeIs('reports.revenue') ? 'active' : '' }}">
             <i class="bi bi-bar-chart-line-fill me-2"></i> Revenue Report
         </a>
     @endif
 
-    <!-- View Detailed Report -->
+    <!-- Admin Activities -->
     @if(auth()->user()->role === 'superadmin')
-        <a href="{{ route('reports.expenses') }}">
-            <i class="bi bi-receipt me-2"></i> Expense Report
+        <a href="{{ route('admin.activities') }}"
+        class="{{ request()->routeIs('admin.activities') ? 'active' : '' }}">
+            <i class="bi bi-tools me-2"></i> Admin Activities
         </a>
     @endif
 
@@ -128,7 +78,7 @@
     <nav class="navbar navbar-light px-4 d-flex justify-content-between align-items-center border-bottom" style="background: #fff;">
 
         <!-- Left: School Name -->
-        <div class="text-primary fw-bold fs-5">
+        <div class="fw-bold fs-5" style="color: #6B4378;">
             <i class="bi bi-mortarboard-fill"></i> Hamare Nhane Kadam School
         </div>
 
@@ -140,7 +90,7 @@
             id="userDropdown" 
             data-bs-toggle="dropdown" 
             aria-expanded="false"
-            style="border-radius: 8px; background-color: rgb(68, 142, 222);">
+            style="border-radius: 8px;">
                 {{ auth()->user()->name }}
             </a>
 
@@ -176,20 +126,6 @@
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-<!-- Auto-hide welcome message -->
-@if(session('show_welcome'))
-<script>
-    setTimeout(() => {
-        const msg = document.getElementById('welcomeMessage');
-        if (msg) {
-            msg.style.transition = "opacity 1s ease";
-            msg.style.opacity = 0;
-            setTimeout(() => msg.remove(), 1000);
-        }
-    }, 12000); // 12 seconds
-</script>
-@endif
 
 </body>
 </html>
