@@ -32,30 +32,46 @@
     @endphp
 
     <div class="row mb-4">
-        <div class="col-md-3">
+        {{-- Base Fee --}}
+        <div class="col-md-2">
             <label class="fw-semibold text-dark">Base Fee (₹):</label>
             <div class="form-control bg-light">
                 {{ number_format($defaultFee, 2) }}
             </div>
         </div>
-        <div class="col-md-3">
+
+        {{-- Discount --}}
+        <div class="col-md-2">
             <label class="fw-semibold text-dark">Discount (₹):</label>
             <div class="form-control bg-light">
                 {{ number_format($discount, 2) }}
             </div>
         </div>
-        <div class="col-md-3">
+
+        {{-- Final Payable Fee --}}
+        <div class="col-md-2">
             <label class="fw-semibold text-dark">Final Payable Fee (₹):</label>
             <div class="form-control bg-light">
                 {{ number_format($finalFee, 2) }}
             </div>
         </div>
-        <div class="col-md-3">
+
+        {{-- Paid --}}
+        <div class="col-md-2">
+            <label class="fw-semibold text-dark">Paid (₹):</label>
+            <div class="form-control bg-light text-success fw-bold">
+                {{ number_format($paid, 2) }}
+            </div>
+        </div>
+
+        {{-- Pending --}}
+        <div class="col-md-2">
             <label class="fw-semibold text-dark">Pending Amount (₹):</label>
             <div class="form-control bg-light text-danger fw-bold">
                 {{ number_format($pending, 2) }}
             </div>
         </div>
+
     </div>
 
     {{-- Action Buttons --}}

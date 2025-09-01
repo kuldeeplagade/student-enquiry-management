@@ -80,11 +80,17 @@ class EnquiryController extends Controller
     public function index(Request $request)
     {
         $selectedClass = $request->get('class', 'All');
+        $selectedBranch = $request->get('branch_name', 'All');
         $search = $request->get('search');
+
         $classes = ['Playgroup', 'Nursery', 'Jr.KG', 'Sr.KG', 'Day Care'];
+        $branches = ['Mumbai Branch 1', 'Mumbai Branch 2'];
 
         $enquiries = Enquiry::when($selectedClass !== 'All', function ($query) use ($selectedClass) {
                 return $query->where('admission_for', $selectedClass);
+            })
+            ->when($selectedBranch !== 'All', function ($query) use ($selectedBranch) {
+                return $query->where('branch_name', $selectedBranch);
             })
             ->when($search, function ($query) use ($search) {
                 return $query->where(function ($q) use ($search) {
@@ -96,10 +102,18 @@ class EnquiryController extends Controller
             })
             ->orderBy('id', 'desc')
             ->paginate(5)
-            ->withQueryString(); // Keeps search params in pagination links
+            ->withQueryString();
 
-        return view('dashboard.enquiries.index', compact('enquiries', 'classes', 'selectedClass', 'search'));
+        return view('dashboard.enquiries.index', compact(
+            'enquiries',
+            'classes',
+            'branches',
+            'selectedClass',
+            'selectedBranch',
+            'search'
+        ));
     }
+
 
 
 
@@ -150,5 +164,63 @@ class EnquiryController extends Controller
             return back()->with('error', 'Something went wrong while updating enquiry.');
         }
     }
+
+    public function confirmedAdmissions(Request $request)
+    {
+        $selectedClass = $request->get('class', 'All');
+        $selectedBranch = $request->get('branch_name', 'All');
+        $search = $request->get('search');
+
+        $classes = ['Playgroup', 'Nursery', 'Jr.KG', 'Sr.KG', 'Day Care'];
+        $branches = ['Mumbai Branch 1', 'Mumbai Branch 2'];
+
+        $enquiries = Enquiry::where(function ($query) {
+                $query->where('discount_amount', '>', 0)
+                    ->orWhereHas('payments');
+            })
+            ->when($selectedClass !== 'All', function ($query) use ($selectedClass) {
+                return $query->where('admission_for', $selectedClass);
+            })
+            ->when($selectedBranch !== 'All', function ($query) use ($selectedBranch) {
+                return $query->where('branch_name', $selectedBranch);
+            })
+            ->when($search, function ($query) use ($search) {
+                return $query->where(function ($q) use ($search) {
+                    $q->where('first_name', 'like', "%{$search}%")
+                    ->orWhere('surname', 'like', "%{$search}%")
+                    ->orWhere('father_mobile', 'like', "%{$search}%")
+                    ->orWhere('middle_name', 'like', "%{$search}%");
+                });
+            })
+            ->with('payments')
+            ->orderBy('id', 'desc')
+            ->paginate(5)
+            ->withQueryString();
+
+        return view('dashboard.enquiries.confirmed', compact(
+            'enquiries',
+            'classes',
+            'branches',
+            'selectedClass',
+            'selectedBranch',
+            'search'
+        ));
+    }
+
+    //Delete enquiry 
+    public function destroy($id)
+    {
+        $enquiry = Enquiry::findOrFail($id);
+
+        if ($enquiry->discount_amount == 0 && $enquiry->payments()->count() == 0) {
+            $enquiry->delete();
+            return redirect()->route('enquiries.index')->with('success', 'Enquiry deleted successfully.');
+        }
+
+        return redirect()->route('enquiries.confirmed')->with('error', 'Cannot delete confirmed admission.');
+    }
+
+
+
 
 }

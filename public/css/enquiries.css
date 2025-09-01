@@ -1,0 +1,44 @@
+.custom-btn {
+    color: #fff;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 0.875rem;
+    transition: background-color 0.3s ease;
+}
+
+.edit-btn {
+    background-color: #f0ad4e;
+}
+.edit-btn:hover {
+    background-color: #e0962f;
+}
+
+.view-btn {
+    background-color: #5bc0de;
+}
+.view-btn:hover {
+    background-color: #31a6c4;
+}
+
+.payment-btn {
+    background-color: #5cb85c;
+}
+.payment-btn:hover {
+    background-color: #449d44;
+}
+
+.delete-btn {
+    background-color: #d9534f;
+}
+.delete-btn:hover {
+    background-color: #c9302c;
+}
+
+td {
+    vertical-align: middle !important;
+}
+
+.scroll-y {
+    max-height: 420px;
+    overflow-y: auto;
+}

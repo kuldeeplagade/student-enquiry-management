@@ -11,70 +11,85 @@ use Carbon\Carbon;
 
 class ReportsController extends Controller
 {
-    //Revenue Related Report
+    //Revenue Related 
     public function revenue(Request $request)
     {
-        $month = $request->input('month'); // Could be null (All Months)
+        $month = $request->input('month');
         $year = $request->input('year');
 
-        // Handle month/year logic properly
+        // Handle month/year logic
         if ($year && !$month) {
-            // Filter by year only
             $startDate = Carbon::createFromDate($year, 1, 1)->startOfYear();
             $endDate = Carbon::createFromDate($year, 12, 31)->endOfYear();
         } elseif ($year && $month) {
-            // Filter by both month and year
             $startDate = Carbon::createFromDate($year, $month, 1)->startOfMonth();
             $endDate = Carbon::createFromDate($year, $month, 1)->endOfMonth();
         } else {
-            // Default to current month & year
             $startDate = Carbon::now()->startOfMonth();
             $endDate = Carbon::now()->endOfMonth();
             $year = $startDate->year;
             $month = $startDate->month;
         }
 
-        // Build base query
-        $baseQuery = Enquiry::with(['payments' => function ($q) use ($startDate, $endDate) {
-            $q->whereBetween('created_at', [$startDate, $endDate]);
-        }])->whereBetween('created_at', [$startDate, $endDate]);
+        // -------------------------------
+        // PART A: Enquiry-wise Metrics
+        // -------------------------------
+        $enquiryQuery = Enquiry::with('payments')->whereBetween('created_at', [$startDate, $endDate]);
 
-        // Apply additional filters
         if ($request->filled('branch_name')) {
-            $baseQuery->where('branch_name', $request->branch_name);
+            $enquiryQuery->where('branch_name', $request->branch_name);
         }
 
         if ($request->filled('admission_for')) {
-            $baseQuery->where('admission_for', $request->admission_for);
+            $enquiryQuery->where('admission_for', $request->admission_for);
         }
 
         if ($request->filled('student_name')) {
-            $baseQuery->where(function ($q) use ($request) {
+            $enquiryQuery->where(function ($q) use ($request) {
                 $q->where('first_name', 'like', '%' . $request->student_name . '%')
-                    ->orWhere('surname', 'like', '%' . $request->student_name . '%');
+                ->orWhere('surname', 'like', '%' . $request->student_name . '%');
             });
         }
 
-        // Apply pagination (clone query first)
-        $paginatedEnquiries = (clone $baseQuery)
-        ->orderBy('created_at', 'desc') 
-        ->paginate(5)
-        ->withQueryString();
-        $allEnquiries = $baseQuery->get(); // for summary
+        $paginatedEnquiries = (clone $enquiryQuery)
+            ->orderBy('created_at', 'desc')
+            ->paginate(5)
+            ->withQueryString();
 
-        // Summary calculations from all filtered enquiries
-        $totalFinalFee = $allEnquiries->sum(fn($e) => $e->final_fee ?? $e->default_fee ?? 0);
-        $totalDiscount = $allEnquiries->sum('discount_amount');
-        $totalPaid = $allEnquiries->sum(fn($e) => $e->payments->sum('amount_paid'));
-        $totalPending = max(0, $totalFinalFee - $totalPaid);
+        $enquiriesForSummary = $enquiryQuery->get(); // For expected revenue, discount, pending
+
+        $totalFinalFee  = $enquiriesForSummary->sum(fn($e) => $e->final_fee ?? $e->default_fee ?? 0);
+        $totalDiscount  = $enquiriesForSummary->sum('discount_amount');
+        $paidFromEnquiries = $enquiriesForSummary->sum(fn($e) => $e->payments->sum('amount_paid'));
+        $totalPending   = max(0, $totalFinalFee - $paidFromEnquiries);
+
+        // -------------------------------
+        // PART B: Payment-wise Metrics
+        // -------------------------------
+        $paymentQuery = Payment::whereBetween('created_at', [$startDate, $endDate]);
+
+        if ($request->filled('branch_name') || $request->filled('admission_for') || $request->filled('student_name')) {
+            $paymentQuery->whereHas('enquiry', function ($q) use ($request) {
+                if ($request->filled('branch_name')) {
+                    $q->where('branch_name', $request->branch_name);
+                }
+                if ($request->filled('admission_for')) {
+                    $q->where('admission_for', $request->admission_for);
+                }
+                if ($request->filled('student_name')) {
+                    $q->where('first_name', 'like', '%' . $request->student_name . '%')
+                    ->orWhere('surname', 'like', '%' . $request->student_name . '%');
+                }
+            });
+        }
+
+        $totalPaid = $paymentQuery->sum('amount_paid'); //  Actual revenue this month
 
         return view('dashboard.reports.revenue', compact(
             'paginatedEnquiries', 'startDate', 'endDate', 'month', 'year',
-            'totalFinalFee', 'totalPaid', 'totalPending', 'totalDiscount'
+            'totalFinalFee', 'totalDiscount', 'totalPending', 'totalPaid'
         ));
     }
-
-
 
     //Expeneses related Report 
     public function expenses(Request $request)

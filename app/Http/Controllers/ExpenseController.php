@@ -16,15 +16,38 @@ class ExpenseController extends Controller
     // Total Expenses, Revenue, Net Profit and Expected Revenue (with optional month filter)
     public function revenueSummary(Request $request)
     {
-        $month = $request->input('month', Carbon::now()->format('m'));
-        $year = $request->input('year', Carbon::now()->format('Y'));
+        $month = $request->input('month', date('m'));
+        $year = $request->input('year', date('Y'));
 
-        $startDate = Carbon::createFromDate($year, $month, 1)->startOfMonth();
-        $endDate = Carbon::createFromDate($year, $month, 1)->endOfMonth();
+        // Date Range Calculation
+        if ($month === 'All' && $year === 'All') {
+            $startDate = Carbon::create(2023, 1, 1)->startOfDay();
+            $endDate = Carbon::now()->endOfDay();
+        } elseif ($month === 'All') {
+            $startDate = Carbon::create($year, 1, 1)->startOfDay();
+            $endDate = Carbon::create($year, 12, 31)->endOfDay();
+        } elseif ($year === 'All') {
+            $startDate = Carbon::create(2023, $month, 1)->startOfMonth();
+            $endDate = Carbon::now()->endOfDay();
+        } else {
+            $startDate = Carbon::createFromDate($year, $month, 1)->startOfMonth();
+            $endDate = Carbon::createFromDate($year, $month, 1)->endOfMonth();
+        }
 
+        // Actual Revenue = total of payments made
         $totalRevenue = Payment::whereBetween('created_at', [$startDate, $endDate])->sum('amount_paid');
+
+        // Matching logic from revenue()
+        $enquiries = Enquiry::with('payments')
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->get();
+
+        $expectedRevenue = $enquiries->sum(fn($e) => $e->final_fee ?? $e->default_fee ?? 0);
+
+        // Total Expenses
         $totalExpenses = Expense::whereBetween('date', [$startDate, $endDate])->sum('amount');
-        $expectedRevenue = Enquiry::sum('final_fee');
+
+        // Net Profit = Revenue - Expenses
         $netProfit = $totalRevenue - $totalExpenses;
 
         return view('dashboard.expenses.revenue-summary', compact(
@@ -37,17 +60,24 @@ class ExpenseController extends Controller
         ));
     }
 
+
     public function index()
     {
-        $expenses = Expense::with('category')  // Optional: if not already eager loaded
-                        ->orderBy('created_at', 'desc') // <-- changed this line
+        $currentMonth = Carbon::now()->month;
+        $currentYear = Carbon::now()->year;
+
+        $expenses = Expense::with('category')
+                        ->orderBy('created_at', 'desc')
                         ->paginate(5);
 
-        $total = Expense::sum('amount'); // Get total of all, not just current page
+        // Total for current month only
+        $total = Expense::whereYear('date', $currentYear)
+                        ->whereMonth('date', $currentMonth)
+                        ->sum('amount');
 
         $categories = ExpenseCategory::orderBy('name')->get();
 
-        return view('dashboard.expenses.index', compact('expenses', 'total', 'categories'));
+        return view('dashboard.expenses.index', compact('expenses', 'total', 'categories', 'currentMonth'));
     }
 
 

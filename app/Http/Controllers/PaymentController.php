@@ -24,21 +24,20 @@ class PaymentController extends Controller
     //Add payment 
     public function store(Request $request, $id)
     {
-        $enquiry = Enquiry::findOrFail($id);
+        $enquiry = Enquiry::with('payments')->findOrFail($id); // Eager load payments
 
         // Step 1: Validate input
         $request->validate([
             'payment_mode' => 'required|string',
-            'amount_paid' => 'required|numeric|min:1',
-            'notes' => 'nullable|string',
+            'amount_paid'  => 'required|numeric|min:1',
+            'notes'        => 'nullable|string',
         ]);
 
-        // Step 2: Ensure final_fee is set if default_fee exists and final_fee is null
+        // Step 2: Ensure final_fee is set if null
         if (!is_null($enquiry->default_fee) && is_null($enquiry->final_fee)) {
             $enquiry->final_fee = $enquiry->default_fee;
             $enquiry->save();
 
-            // Optional log entry for tracking when auto final_fee is set
             ActivityLogger::log(
                 'Final Fee Auto Set',
                 'Final fee set to default fee ₹' . $enquiry->default_fee . ' for ' . $enquiry->first_name . ' ' . $enquiry->last_name
@@ -47,11 +46,12 @@ class PaymentController extends Controller
 
         // Step 3: Prevent overpayment
         $total = $enquiry->final_fee ?? $enquiry->default_fee ?? 0;
-        $paid = $enquiry->payments->sum('amount_paid');
+        $paid  = $enquiry->payments->sum('amount_paid');
         $newPayment = $request->amount_paid;
 
         if ($total > 0 && ($paid + $newPayment) > $total) {
-            return back()->with('error', 'Payment exceeds payable fee!');
+            $excess = ($paid + $newPayment) - $total;
+            return back()->with('error', "Payment exceeds payable fee by ₹" . number_format($excess, 2));
         }
 
         // Step 4: Save the payment
